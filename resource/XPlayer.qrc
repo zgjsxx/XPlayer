@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file alias="main.qml">ui/qml/main.qml</file>
+    </qresource>
+    <qresource prefix="/image">
+        <file alias="bigVoice.png">ui/image/bigVoice.png</file>
+        <file alias="changeLanguage.png">ui/image/changeLanguage.png</file>
+        <file alias="changeSkin.png">ui/image/changeSkin.png</file>
+        <file alias="goBack.png">ui/image/goBack.png</file>
+        <file alias="goOn.png">ui/image/goOn.png</file>
+        <file alias="isPause.png">ui/image/isPause.png</file>
+        <file alias="isPlay.png">ui/image/isPlay.png</file>
+        <file alias="isStop.png">ui/image/isStop.png</file>
+        <file alias="midiumVoice.png">ui/image/midiumVoice.png</file>
+        <file alias="openFile.png">ui/image/openFile.png</file>
+        <file alias="smallVoice.png">ui/image/smallVoice.png</file>
+        <file alias="subTitle.png">ui/image/subTitle.png</file>
+        <file alias="zeroVoice.png">ui/image/zeroVoice.png</file>
+    </qresource>
+</RCC>
