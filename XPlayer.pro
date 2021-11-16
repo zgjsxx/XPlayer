@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         MainApp.cpp \
         XDemux.cpp \
+        XDemuxThread.cpp \
         XPlay.cpp \
         main.cpp
 
@@ -34,8 +35,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    IVideoCall.h \
     MainApp.h \
+    XAudioPlay.h \
+    XAudioThread.h \
     XDemux.h \
+    XDemuxThread.h \
     XPlay.h
 
 
@@ -43,21 +48,8 @@ HEADERS += \
 INCLUDEPATH += ./import/ffmpeg/include
 
 # Libaray path and libaray
-CONFIG(debug, debug|release) {
-    contains(QMAKE_TARGET.arch, x86_64) {
-        LIBS += -L"./import/ffmpeg/lib/debug/x64/"
-    } else {
-        LIBS += -L"./import/ffmpeg/lib/debug/x86/"
-    }
-} else {
-    contains(QMAKE_TARGET.arch, x86_64) {
-        LIBS += -L"./import/ffmpeg/lib/release/x64/"
-    } else {
-        LIBS += -L"./import/ffmpeg/lib/release/x86/"
-    }
-}
-win32:LIBS += avformat.lib\
-              avcodec.lib\
-              avutil.lib\
-              swresample.lib\
-              swscale.lib
+
+
+LIBS += -L$$PWD/import/ffmpeg/lib/debug/x64/ -lavformat -lavcodec -lavcodec -lavutil -lswresample -lswscale
+
+

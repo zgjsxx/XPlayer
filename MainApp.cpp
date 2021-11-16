@@ -5,7 +5,7 @@
 #include <QFont>
 #include <QDebug>
 #include "MainApp.h"
-
+#include "XPlay.h"
 
 #define APP_NAME                    "XPlayer"
 #define APP_ICON_PATH               ":/image/AppIcon.ico"
@@ -122,6 +122,7 @@ bool MainApp::InitializeUI(QQmlApplicationEngine *pQmlEngine)
     setFont(QFont(DEFAULT_FONT_NAME,9));
     qmlRegisterSingletonType<MainApp>("com.may.myplayer", 1, 0, "MainApp",
                                       &MainApp::GetInstance);
+    qmlRegisterType<XPlay>("com.may.myplayer", 1, 0, "XPlay");
 
     pQmlEngine->load(QUrl(QStringLiteral(UI_MAIN_PATH)));
 

@@ -1,0 +1,4 @@
+#ifndef XAUDIOTHREAD_H
+#define XAUDIOTHREAD_H
+
+#endif // XAUDIOTHREAD_H
