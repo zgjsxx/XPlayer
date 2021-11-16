@@ -15,6 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         MainApp.cpp \
+        XDemux.cpp \
+        XPlay.cpp \
         main.cpp
 
 RESOURCES += \
@@ -33,4 +35,29 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     MainApp.h \
+    XDemux.h \
     XPlay.h
+
+
+#Include path
+INCLUDEPATH += ./import/ffmpeg/include
+
+# Libaray path and libaray
+CONFIG(debug, debug|release) {
+    contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS += -L"./import/ffmpeg/lib/debug/x64/"
+    } else {
+        LIBS += -L"./import/ffmpeg/lib/debug/x86/"
+    }
+} else {
+    contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS += -L"./import/ffmpeg/lib/release/x64/"
+    } else {
+        LIBS += -L"./import/ffmpeg/lib/release/x86/"
+    }
+}
+win32:LIBS += avformat.lib\
+              avcodec.lib\
+              avutil.lib\
+              swresample.lib\
+              swscale.lib
