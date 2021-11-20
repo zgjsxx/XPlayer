@@ -1,4 +1,4 @@
-QT += quick core gui widgets
+QT += qml quick gui widgets multimedia opengl openglextensions
 
 CONFIG += c++11
 
@@ -14,10 +14,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        CXAudioPlay.cpp \
         MainApp.cpp \
+        XAudioPlay.cpp \
+        XAudioThread.cpp \
+        XDecode.cpp \
+        XDecodeThread.cpp \
         XDemux.cpp \
         XDemuxThread.cpp \
         XPlay.cpp \
+        XResample.cpp \
+        XVideoOutput.cpp \
+        XVideoThread.cpp \
         main.cpp
 
 RESOURCES += \
@@ -35,13 +43,20 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    CXAudioPlay.h \
     IVideoCall.h \
     MainApp.h \
     XAudioPlay.h \
     XAudioThread.h \
+    XDecode.h \
+    XDecodeThread.h \
     XDemux.h \
     XDemuxThread.h \
-    XPlay.h
+    XPlay.h \
+    XResample.h \
+    XSubTitle.h \
+    XVideoOutput.h \
+    XVideoThread.h
 
 
 #Include path

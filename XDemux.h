@@ -10,20 +10,28 @@ struct AVCodecParameters;
 class XDemux
 {
 public:
+    XDemux();
+    virtual ~XDemux();
+
+public:
     virtual bool Open(const char *url);
 
     virtual AVPacket *Read();
 
     virtual AVPacket *ReadVideo();
 
+    virtual bool IsAudio(AVPacket *pkt);
+
+    virtual AVCodecParameters *CopyVideoParam();
+
+    virtual AVCodecParameters *CopyAudioParam();
+
     virtual bool Seek(double pos);
 
     virtual void Clear();
     virtual void Close();
-public:
-    XDemux();
-    virtual ~XDemux();
 
+public:
     //media total time (ms)
     int totalMs = 0;
     int width = 0;
@@ -34,8 +42,8 @@ protected:
     std::mutex mux;
     AVFormatContext *ic = NULL;
     //video and audio mapping
-    int videoStream = 0;
-    int audioStream = 1;
+    int m_videoStreamIndex = 0;
+    int m_audioStreamIndex = 1;
 };
 
 #endif // XDEMUX_H
