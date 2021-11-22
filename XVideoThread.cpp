@@ -1,13 +1,28 @@
 #include <iostream>
 #include "XVideoThread.h"
 #include "XDecode.h"
-
+#include "DebugLog.h"
 using namespace std;
+
+XVideoThread::XVideoThread()
+{
+    LOG_DBG << "initial XVideoThread" << std::endl;
+}
+
+
+XVideoThread::~XVideoThread()
+{
+
+}
 
 //打开，不管成功与否都清理
 bool XVideoThread::Open(AVCodecParameters *para, IVideoCall *call, int width, int height)
 {
-    if (!para)return false;
+    if (!para)
+    {
+        LOG_DBG << "No Param" << std::endl;
+        return false;
+    }
 
     Clear();
 
@@ -21,13 +36,13 @@ bool XVideoThread::Open(AVCodecParameters *para, IVideoCall *call, int width, in
     }
     vmux.unlock();
     int re = true;
-    if (!decode->Open(para))
+    if (!m_pDecode->Open(para))
     {
-        cout << "audio MYDecode open failed!" << endl;
+        LOG_DBG << "audio MYDecode open failed!" << std::endl;
         re = false;
     }
 
-    cout << "MYAudioThread::Open :" << re << endl;
+    LOG_DBG << "XVideoThread::Open :" << re << std::endl;
     return re;
 }
 void XVideoThread::SetPause(bool isPause)
@@ -39,19 +54,21 @@ void XVideoThread::SetPause(bool isPause)
 
 void XVideoThread::run()
 {
+    LOG_DBG << "XVideoThread start" << std::endl;
     while (!isExit)
     {
         vmux.lock();
 
         if (this->isPause)
         {
+            LOG_DBG << "Video Thead is pause" << std::endl;
             vmux.unlock();
             msleep(5);
             continue;
         }
 
         //音视频同步
-        if (synpts >0 && synpts < decode->pts)
+        if (synpts >0 && synpts < m_pDecode->pts)
         {
             vmux.unlock();
             msleep(1);
@@ -69,7 +86,7 @@ void XVideoThread::run()
         //
         //AVPacket *pkt = packs.front();
         //packs.pop_front();
-        bool re = decode->Send(pkt);
+        bool re = m_pDecode->Send(pkt);
         if (!re)
         {
             vmux.unlock();
@@ -79,7 +96,7 @@ void XVideoThread::run()
         //一次send 多次recv
         while (!isExit)
         {
-            AVFrame * frame = decode->Recv();
+            AVFrame * frame = m_pDecode->Recv();
             if (!frame) break;
             //显示视频
             if (call)
@@ -96,20 +113,20 @@ void XVideoThread::run()
 bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
 {
     vmux.lock();
-    bool re = decode->Send(pkt);
+    bool re = m_pDecode->Send(pkt);
     if (!re)
     {
         vmux.unlock();
         return true;   //表示结束解码
     }
-    AVFrame *frame = decode->Recv();
+    AVFrame *frame = m_pDecode->Recv();
     if (!frame)
     {
         vmux.unlock();
         return false;
     }
     //到达位置
-    if (decode->pts >= seekpts)
+    if (m_pDecode->pts >= seekpts)
     {
         if (call)
             call->Repaint(frame);
@@ -121,13 +138,4 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
     return false;
 }
 
-XVideoThread::XVideoThread()
-{
-}
-
-
-XVideoThread::~XVideoThread()
-{
-
-}
 

@@ -4,7 +4,7 @@ extern "C"
     #include<libavcodec/avcodec.h>
 }
 #include "XDecode.h"
-
+#include "DebugLog.h"
 void MYFreePacket(AVPacket **pkt)
 {
     if (!pkt || !(*pkt))return;
@@ -67,11 +67,11 @@ bool XDecode::Open(AVCodecParameters *param)
          mux.unlock();
          char buf[1024] = { 0 };
          av_strerror(re, buf, sizeof(buf) - 1);
-         std::cout << "<XDecode:Open> avcodec_open2  failed! :" << buf << std::endl;
+         LOG_DBG << "avcodec_open2  failed! :" << buf << std::endl;
          return false;
      }
      mux.unlock();
-     std::cout << " avcodec_open2 success!" << std::endl;
+     LOG_DBG << "avcodec_open2 success!" << std::endl;
      return true;
 }
 
@@ -99,7 +99,6 @@ bool XDecode::Send(AVPacket *pkt)
 
 AVFrame* XDecode::Recv()
 {
-    mux.lock();
     mux.lock();
     if (!codec)
     {

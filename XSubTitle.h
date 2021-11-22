@@ -10,8 +10,8 @@ class XSubTitle : public QObject
 {
     Q_OBJECT
  public:
-//    XSubTitle();
-//    ~XSubTitle();
+    XSubTitle();
+    ~XSubTitle();
 public:
     void Open(QString url);
     bool Read(int currentTime);

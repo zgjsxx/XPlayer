@@ -20,7 +20,7 @@ public:
     int maxList = 100;
     bool isExit = false;
 protected:
-    XDecode *decode = 0;
+    XDecode *m_pDecode = 0;
     std::list<AVPacket *> packs;
     std::mutex mux;
 };

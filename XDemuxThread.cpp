@@ -4,14 +4,15 @@ extern "C"
 {
     #include <libavformat/avformat.h>
 }
-
+#include <iostream>
 #include "XDemuxThread.h"
 #include "XDemux.h"
 #include "XVideoThread.h"
+#include "DebugLog.h"
 
 XDemuxThread::XDemuxThread()
 {
-
+    LOG_DBG << "XDemuxThread is created" << std::endl;
 }
 
 XDemuxThread::~XDemuxThread()
@@ -70,10 +71,16 @@ void XDemuxThread::Clear()
     mux.lock();
     if (m_pDemux)
     {
-       m_pDemux->Clear();
+        m_pDemux->Clear();
     }
-    if (vt)vt->Clear();
-    if (at)at->Clear();
+    if (vt)
+    {
+        vt->Clear();
+    }
+    if (at)
+    {
+        at->Clear();
+    }
     mux.unlock();
 }
 
@@ -92,7 +99,7 @@ void XDemuxThread::Seek(double pos)
         m_pDemux->Seek(pos);
     mux.unlock();
     //实际要显示的位置pts
-    long long seekPts = pos*m_pDemux->totalMs;
+    long long seekPts = pos*m_pDemux->m_totalMs;
     while (!isExit)
     {
         AVPacket *pkt = m_pDemux->ReadVideo();
@@ -126,12 +133,19 @@ void XDemuxThread::SetPause(bool isPause)
 {
     mux.lock();
     this->isPause = isPause;
-    if (at)at->SetPause(isPause);
-    if (vt)vt->SetPause(isPause);
+    if (at)
+    {
+       at->SetPause(isPause);
+    }
+    if (vt)
+    {
+        vt->SetPause(isPause);
+    }
     mux.unlock();
 }
 void XDemuxThread::run()
 {
+    LOG_DBG << "XDemuxThread start" << std::endl;
     while (!isExit)
      {
          mux.lock();
@@ -165,11 +179,17 @@ void XDemuxThread::run()
          //判断数据是音频
          if (m_pDemux->IsAudio(pkt))
          {
-             if (at)at->Push(pkt);
+             if (at)
+             {
+                at->Push(pkt);
+             }
          }
          else //视频
          {
-             if (vt)vt->Push(pkt);
+             if (vt)
+             {
+                 vt->Push(pkt);
+             }
          }
          mux.unlock();
          msleep(1);
@@ -188,6 +208,7 @@ bool XDemuxThread::Open(const char *url, IVideoCall *call)
         qDebug()<<"file url patch is None"<<endl;
         return false;
     }
+    LOG_DBG << "url path is " << url << std::endl;
     mux.lock();
     if(!m_pDemux){
         m_pDemux = new XDemux();
@@ -207,18 +228,18 @@ bool XDemuxThread::Open(const char *url, IVideoCall *call)
         std::cout<< "demux open failed" << std::endl;
     }
     setOpenSuccess(true);
-    if (!vt->Open(m_pDemux->CopyVideoParam(), call, m_pDemux->width, m_pDemux->height))
+    if (!vt->Open(m_pDemux->CopyVideoParam(), call, m_pDemux->m_width, m_pDemux->m_height))
     {
         re = false;
         std::cout << "vt->Open failed!" << std::endl;
     }
     //打开音频解码器和处理线程
-    if (!at->Open(m_pDemux->CopyAudioParam(), m_pDemux->sampleRate, m_pDemux->channels))
+    if (!at->Open(m_pDemux->CopyAudioParam(), m_pDemux->m_sampleRate, m_pDemux->m_channels))
     {
         re = false;
         std::cout << "at->Open failed!" << std::endl;
     }
-    totalMs = m_pDemux->totalMs;
+    totalMs = m_pDemux->m_totalMs;
     mux.unlock();
     return re;
 
@@ -251,3 +272,7 @@ void XDemuxThread::Close()
     mux.unlock();
 }
 
+bool XDemuxThread::getOpenSuccess()
+{
+    return openSuccess;
+}

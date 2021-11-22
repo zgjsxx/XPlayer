@@ -33,11 +33,11 @@ public:
 
 public:
     //media total time (ms)
-    int totalMs = 0;
-    int width = 0;
-    int height = 0;
-    int sampleRate = 0;
-    int channels = 0;
+    int m_totalMs = 0;
+    int m_width = 0;
+    int m_height = 0;
+    int m_sampleRate = 0;
+    int m_channels = 0;
 protected:
     std::mutex mux;
     AVFormatContext *ic = NULL;

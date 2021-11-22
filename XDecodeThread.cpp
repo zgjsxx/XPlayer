@@ -1,6 +1,21 @@
 #include "XDecode.h"
 #include "XDecodeThread.h"
 
+XDecodeThread::XDecodeThread()
+{
+    //打开解码器
+    if (!m_pDecode)
+    {
+        m_pDecode = new XDecode();
+    }
+}
+
+XDecodeThread::~XDecodeThread()
+{
+    isExit = true;
+    wait();
+}
+
 void XDecodeThread::Close()
 {
     Clear();
@@ -8,18 +23,18 @@ void XDecodeThread::Close()
     //等待线程结束
     isExit = true;
     wait();
-    decode->Close();
+    m_pDecode->Close();
 
     mux.lock();
-    delete decode;
-    decode = NULL;
+    delete m_pDecode;
+    m_pDecode = NULL;
     mux.unlock();
 }
 
 void XDecodeThread::Clear()
 {
     mux.lock();
-    decode->Clear();
+    m_pDecode->Clear();
     while (!packs.empty())
     {
         AVPacket *pkt = packs.front();
@@ -61,17 +76,3 @@ void XDecodeThread::Push(AVPacket *pkt)
     }
 }
 
-XDecodeThread::XDecodeThread()
-{
-    //打开解码器
-    if (!decode)
-    {
-        decode = new XDecode();
-    }
-}
-
-XDecodeThread::~XDecodeThread()
-{
-    isExit = true;
-    wait();
-}

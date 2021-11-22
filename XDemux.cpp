@@ -1,10 +1,11 @@
 #include <iostream>
+#include <QDebug>
 extern "C"
 {
     #include <libavformat/avformat.h>
 }
 #include "XDemux.h"
-
+#include "DebugLog.h"
 using namespace std;
 
 static double r2d(AVRational r)
@@ -61,44 +62,44 @@ bool XDemux::Open(const char *url)
 
     //get the information of the stream
     re = avformat_find_stream_info(ic,0);
-    this->totalMs = ic->duration/(AV_TIME_BASE / 1000);
-    cout << "totalMs = " << totalMs << endl;
+    m_totalMs = ic->duration/(AV_TIME_BASE / 1000);
+    LOG_DBG << "totalMs = " << m_totalMs << std::endl;
     av_dump_format(ic,0,url,0);
 
     //获取视频流
      m_videoStreamIndex = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
      AVStream *as = ic->streams[m_videoStreamIndex];
-     width = as->codecpar->width;
-     height = as->codecpar->height;
+     m_width = as->codecpar->width;
+     m_height = as->codecpar->height;
 
-     cout << "======================================================================" << endl;
-     cout << m_videoStreamIndex << "视频信息" << endl;
-     cout << "codec_id = " << as->codecpar->codec_id << endl;
-     cout << "format = " << as->codecpar->format << endl;
-     cout << "width=" << as->codecpar->width << endl;
-     cout << "height=" << as->codecpar->height << endl;
+     std::cout << "============================VIDEO INFO==================================" << std::endl;
+     LOG_DBG << "video index is " << m_videoStreamIndex << std::endl;
+     LOG_DBG << "codec_id = " << as->codecpar->codec_id << std::endl;
+     LOG_DBG << "format = " << as->codecpar->format << std::endl;
+     LOG_DBG << "width=" << as->codecpar->width << std::endl;
+     LOG_DBG << "height=" << as->codecpar->height << std::endl;
      //帧率 fps 分数转换
-     cout << "video fps = " << r2d(as->avg_frame_rate) << endl;
+     LOG_DBG << "video fps = " << r2d(as->avg_frame_rate) << std::endl;
 
-     cout << "======================================================================" << endl;
-     cout << m_audioStreamIndex << "音频信息" << endl;
+
+     std::cout << "============================AUDIO INFO==================================" << std::endl;
      //获取音频流
      m_audioStreamIndex = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+     LOG_DBG << "audio index is " << m_audioStreamIndex << std::endl;
      as = ic->streams[m_audioStreamIndex];
-     sampleRate = as->codecpar->sample_rate;
-     channels = as->codecpar->channels;
+     m_sampleRate = as->codecpar->sample_rate;
+     m_channels = as->codecpar->channels;
 
-     cout << "codec_id = " << as->codecpar->codec_id << endl;
-     cout << "format = " << as->codecpar->format << endl;
-     cout << "sample_rate = " << as->codecpar->sample_rate << endl;
+     LOG_DBG << "codec_id = " << as->codecpar->codec_id << endl;
+     LOG_DBG << "format = " << as->codecpar->format << endl;
+     LOG_DBG << "sample_rate = " << as->codecpar->sample_rate << endl;
      //AVSampleFormat
-     cout << "channels = " << as->codecpar->channels << endl;
+     LOG_DBG << "channels = " << as->codecpar->channels << endl;
      //一帧数据：存放一定量样本数
-     cout << "frame_size = " << as->codecpar->frame_size << endl;
+     LOG_DBG << "frame_size = " << as->codecpar->frame_size << endl;
      //fps = sample_rate/frame_size
+
      mux.unlock();
-
-
      return true;
 }
 
@@ -170,7 +171,7 @@ void XDemux::Close()
     }
     avformat_close_input(&ic);
     //媒体总时长（毫秒）
-    totalMs = 0;
+    m_totalMs = 0;
     mux.unlock();
 }
 

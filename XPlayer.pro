@@ -24,6 +24,7 @@ SOURCES += \
         XDemuxThread.cpp \
         XPlay.cpp \
         XResample.cpp \
+        XSubTitle.cpp \
         XVideoOutput.cpp \
         XVideoThread.cpp \
         main.cpp
@@ -44,6 +45,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     CXAudioPlay.h \
+    DebugLog.h \
     IVideoCall.h \
     MainApp.h \
     XAudioPlay.h \
