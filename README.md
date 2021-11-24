@@ -16,7 +16,7 @@ Currently, it supports the below features:
 
 The player is like below:
 
-![player](.\doc\img\player.png)
+![player](doc/img/player.png)
 
 ## 2. framework 
 
