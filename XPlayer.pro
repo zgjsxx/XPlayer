@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         CXAudioPlay.cpp \
+        Logger.cpp \
         MainApp.cpp \
         XAudioPlay.cpp \
         XAudioThread.cpp \
@@ -47,6 +48,8 @@ HEADERS += \
     CXAudioPlay.h \
     DebugLog.h \
     IVideoCall.h \
+    Logger.h \
+    LoggerTemplate.h \
     MainApp.h \
     XAudioPlay.h \
     XAudioThread.h \

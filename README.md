@@ -14,6 +14,10 @@ Currently, it supports the below features:
 - seek videos
 - stop video
 
+The player is like below:
+
+![player](.\doc\img\player.png)
+
 ## 2. framework 
 
 We have three threads, they are XDemuxThread, XAudioThread and XVideoThread

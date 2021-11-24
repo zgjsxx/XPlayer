@@ -6,6 +6,8 @@ extern "C"
 }
 #include "XDemux.h"
 #include "DebugLog.h"
+#include "Logger.h"
+
 using namespace std;
 
 static double r2d(AVRational r)
@@ -20,6 +22,7 @@ XDemux::XDemux()
     dmux.lock();
     if(isFirst)
     {
+        LOG_DEBUG << "register all kit";
         av_register_all();
         avformat_network_init();
         isFirst = false;
