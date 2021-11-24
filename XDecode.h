@@ -18,13 +18,14 @@ public:
     XDecode();
     virtual ~XDecode();
 public:
-    bool isAudio = false;
-    long long pts = 0;
     virtual bool Open(AVCodecParameters *para);
     virtual bool Send(AVPacket *pkt);
     virtual AVFrame *Recv();
     virtual void Close();
     virtual void Clear();
+public:
+    bool isAudio = false;
+    long long pts = 0;
 protected:
     AVCodecContext *codec = 0;
     std::mutex mux;

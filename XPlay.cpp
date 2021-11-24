@@ -58,9 +58,8 @@ void XPlay::urlPass(QString url)
         QString subTitleP = url.left(url.length() - fileInfo.suffix().length());
         QSettings *settingIni = new QSettings("setting.ini",QSettings::IniFormat);
         QString saveProgress = settingIni->value("Progress/" + url).toString();
-        qDebug()<<saveProgress;
+        LOG_DBG << "Last play time is " << saveProgress.toStdString() << std::endl;
         delete settingIni;
-        //qDebug()<<subTitleP;
         fileInfo = QFileInfo(subTitleP+"srt");     //打开视频时自动查找视频所在文件夹有对应名称的无字幕文件，有则打开
         if(fileInfo.exists())
         {
@@ -96,7 +95,7 @@ void XPlay::posFind(double value)
 {
     double pos = ((double)(int)(((double)dt->pts / (double)dt->totalMs) * 1000)) / 1000;
     double newValue = ((double)(int)(value * 1000)) / 1000;
-    qDebug() << "pos value = " << pos;
+    LOG_DBG << "pos value = " << pos << std::endl;
     dt->Seek(newValue);
 }
 

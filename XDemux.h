@@ -40,7 +40,7 @@ public:
     int m_channels = 0;
 protected:
     std::mutex mux;
-    AVFormatContext *ic = NULL;
+    AVFormatContext *ic = nullptr;
     //video and audio mapping
     int m_videoStreamIndex = 0;
     int m_audioStreamIndex = 1;

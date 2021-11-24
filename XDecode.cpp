@@ -5,6 +5,17 @@ extern "C"
 }
 #include "XDecode.h"
 #include "DebugLog.h"
+
+XDecode::XDecode()
+{
+
+}
+
+XDecode::~XDecode()
+{
+
+}
+
 void MYFreePacket(AVPacket **pkt)
 {
     if (!pkt || !(*pkt))return;
@@ -74,7 +85,10 @@ bool XDecode::Open(AVCodecParameters *param)
      LOG_DBG << "avcodec_open2 success!" << std::endl;
      return true;
 }
-
+/*  解码:
+  * 先使用avcodec_send_packet()
+  * 再使用avcodec_receive_frame()
+*/
 bool XDecode::Send(AVPacket *pkt)
 {
     if(!pkt || pkt->size <= 0 || !pkt->data)
@@ -118,12 +132,3 @@ AVFrame* XDecode::Recv()
     return frame;
 }
 
-XDecode::XDecode()
-{
-
-}
-
-XDecode::~XDecode()
-{
-
-}

@@ -4,7 +4,8 @@
 #include "DebugLog.h"
 using namespace std;
 
-XVideoThread::XVideoThread()
+XVideoThread::XVideoThread():
+    XDecodeThread("video_thread")
 {
     LOG_DBG << "initial XVideoThread" << std::endl;
 }
@@ -61,7 +62,7 @@ void XVideoThread::run()
 
         if (this->isPause)
         {
-            LOG_DBG << "Video Thead is pause" << std::endl;
+            //LOG_DBG << "Video Thead is pause" << std::endl;
             vmux.unlock();
             msleep(5);
             continue;
@@ -70,25 +71,19 @@ void XVideoThread::run()
         //音视频同步
         if (synpts >0 && synpts < m_pDecode->pts)
         {
+            //音频落后于视频
+            //LOG_DBG << "synpts is " << synpts << std::endl;
+            //LOG_DBG << "m_pDecode->pts is " << m_pDecode->pts << std::endl;
             vmux.unlock();
             msleep(1);
             continue;
         }
-        AVPacket *pkt = Pop();
 
-        ////没有数据
-        //if (packs.empty() || !decode)
-        //{
-        //	vmux.unlock();
-        //	msleep(1);
-        //	continue;
-        //}
-        //
-        //AVPacket *pkt = packs.front();
-        //packs.pop_front();
+        AVPacket *pkt = Pop();
         bool re = m_pDecode->Send(pkt);
         if (!re)
         {
+            //No packet
             vmux.unlock();
             msleep(1);
             continue;
@@ -97,7 +92,10 @@ void XVideoThread::run()
         while (!isExit)
         {
             AVFrame * frame = m_pDecode->Recv();
-            if (!frame) break;
+            if (!frame)
+            {
+                break;
+            }
             //显示视频
             if (call)
             {
@@ -116,6 +114,7 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
     bool re = m_pDecode->Send(pkt);
     if (!re)
     {
+        LOG_DBG << "decode finish" << std::endl;
         vmux.unlock();
         return true;   //表示结束解码
     }
@@ -125,14 +124,23 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
         vmux.unlock();
         return false;
     }
-    //到达位置
-    if (m_pDecode->pts >= seekpts)
-    {
-        if (call)
-            call->Repaint(frame);
-        vmux.unlock();
-        return true;
-    }
+
+
+    LOG_DBG << "m_pDecode->pts =" << m_pDecode->pts << std::endl;
+    LOG_DBG << "seekpts =" << seekpts << std::endl;
+//    //到达位置
+//    if (m_pDecode->pts >= seekpts)
+//    {
+//        if (call)
+//        {
+//            call->Repaint(frame);
+//        }
+//        LOG_DBG << "Repaint suc" << std::endl;
+//        vmux.unlock();
+//        return true;
+//    }
+
+
     MYFreeFrame(&frame);
     vmux.unlock();
     return false;

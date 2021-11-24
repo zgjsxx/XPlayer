@@ -189,11 +189,17 @@ bool XDemux::Seek(double pos)
 
     long long seekPos = 0;
     seekPos = ic->streams[m_videoStreamIndex]->duration * pos;
+
+    LOG_DBG << "duration is " << ic->duration/(AV_TIME_BASE/1000) << std::endl;
+    LOG_DBG << "duration is " << ic->streams[m_videoStreamIndex]->duration << std::endl;
+
     int re = av_seek_frame(ic, m_videoStreamIndex, seekPos, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
     mux.unlock();
-    if (re < 0) {
+    if (re < 0)
+    {
         return false;
     }
+    LOG_DBG << "Seek success" << std::endl;
     return true;
 }
 
@@ -218,7 +224,6 @@ AVPacket *XDemux::Read()
     pkt->pts = pkt->pts*(1000 * (r2d(ic->streams[pkt->stream_index]->time_base)));
     pkt->dts = pkt->dts*(1000 * (r2d(ic->streams[pkt->stream_index]->time_base)));
     mux.unlock();
-    //cout << pkt->pts << " "<<flush;
     return pkt;
 
 }

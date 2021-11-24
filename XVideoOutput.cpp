@@ -25,7 +25,9 @@ XVideoOutput::~XVideoOutput()
 void XVideoOutput::Repaint(AVFrame *frame)
 {
     if (!frame)
-        {return;}
+    {
+        return;
+    }
 
     // Convert YUV420P -> RGB32 by libswscale
     if ((nullptr == m_pSwsContext)

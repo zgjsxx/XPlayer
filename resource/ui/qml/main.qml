@@ -190,8 +190,33 @@ Window {
             anchors.rightMargin: 50
             anchors.topMargin: 10
             stepSize: 0.001
+            height: 20
+            background: Rectangle {
+                id: rect3
+                width: playPos.availableWidth
+                height: 10
+                radius: 7
+                color: "#353637"
+
+                Rectangle {
+                    id: rect4
+                    width: playPos.visualPosition * rect3.width
+                    height: rect3.height
+                    color: "#E4E4E4"
+                    radius: 7
+                }
+            }
+            handle: Rectangle {
+                x: playPos.visualPosition * (playPos.availableWidth - implicitWidth)
+                y: playPos.availableHeight / 2 - implicitHeight / 2
+                implicitWidth: 20
+                implicitHeight: 26
+                radius: 13
+                color: playPos.pressed ? "#E4E4E4" : "white"
+                border.color: "black"
+            }
             onValueChanged: {
-                //console.log(value);
+                console.log("play percent is ", value)
                 if(timeTrigger)
                 {
                     timeTrigger = false
@@ -527,16 +552,43 @@ Window {
             }
         }
 
+
         // 音量滑块
         Slider {
             id: volumePos
             anchors.right: playPos.right
             anchors.verticalCenter: openFileBtn.verticalCenter
-            value: 1
+            value: 0.5
             stepSize: 0.01
             width: 120
+            height: 20
+            background: Rectangle {
+                id: rect1
+                width: volumePos.availableWidth
+                height: 10
+                radius: 7
+                color: "#353637"
+
+                Rectangle {
+                    id: rect2
+                    width: volumePos.visualPosition * rect1.width
+                    height: rect1.height
+                    color: "#E4E4E4"
+                    radius: 7
+                }
+            }
+
+            handle: Rectangle {
+                x: volumePos.visualPosition * (volumePos.availableWidth - implicitWidth)
+                y: volumePos.availableHeight / 2 - implicitHeight / 2
+                implicitWidth: 20
+                implicitHeight: 26
+                radius: 13
+                color: volumePos.pressed ? "#E4E4E4" : "white"
+                border.color: "black"
+            }
             onValueChanged:{
-                console.log(value)
+                console.log("volume percent is ", value)
                 if(value == 0 || value == 1)
                     xplay.setVolume(value)
             }

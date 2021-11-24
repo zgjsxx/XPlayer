@@ -18,7 +18,7 @@ public:
     virtual void Close();
     virtual int Resample(AVFrame *indata,unsigned char *data);
 public:
-    int outFormat = 1;
+    int m_outFormat = 1;
 protected:
     std::mutex mux;
     SwrContext *actx = nullptr;

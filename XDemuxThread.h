@@ -38,7 +38,6 @@ protected:
     std::mutex mux;
     XDemux *m_pDemux = 0;
     bool openSuccess = false;
-    //    XVideoThread *vt = 0;
     XAudioThread *at = 0;
     XVideoThread *vt = 0;
 
