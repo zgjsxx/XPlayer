@@ -1,5 +1,4 @@
 #include "XVideoOutput.h"
-#include <QDebug>
 #include <QPainter>
 #include <QTimer>
 extern "C" {
@@ -70,8 +69,6 @@ void XVideoOutput::Repaint(AVFrame *frame)
     mux.unlock();
     av_frame_free(&frame);
 
-    //qDebug() << "刷新显示" << endl;
-    //刷新显示
     emit requestUpdate();
 }
 void XVideoOutput::paint(QPainter *pPainter)

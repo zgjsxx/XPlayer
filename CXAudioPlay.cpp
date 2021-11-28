@@ -1,5 +1,4 @@
 #include "CXAudioPlay.h"
-#include "DebugLog.h"
 void CXAudioPlay::SetVolume(double newVolume)
 {
     // Definition: QAudioOutput *output = NULL;
@@ -76,15 +75,12 @@ void CXAudioPlay::Close()
 
 bool CXAudioPlay::Open()
 {
-    LOG_DBG << "CXAudioPlay::Open()" << std::endl;
     Close();
-    LOG_DBG << "CXAudioPlay::close()" << std::endl;
     QAudioFormat fmt;
     fmt.setSampleRate(sampleRate);
     fmt.setSampleSize(sampleSize);
     fmt.setChannelCount(channels);
     fmt.setCodec("audio/pcm");
-    LOG_DBG << "CXAudioPlay::Open2()" << std::endl;
     fmt.setByteOrder(QAudioFormat::LittleEndian);
     fmt.setSampleType(QAudioFormat::UnSignedInt);
     mux.lock();
@@ -98,7 +94,10 @@ bool CXAudioPlay::Open()
     return false;
 }
 
-//暂停
+/*
+ * function: SetPause
+ *
+*/
 void CXAudioPlay::SetPause(bool isPause)
 {
     mux.lock();

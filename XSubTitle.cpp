@@ -1,14 +1,13 @@
 #include <QFileInfo>
-#include <QDebug>
 #include <QList>
 #include "XSubTitle.h"
-#include "DebugLog.h"
+#include "Logger.h"
 //#include "MYSrtParser.h"
 
 
 XSubTitle::XSubTitle()
 {
-    LOG_DBG << "initial XSubTitle" << std::endl;
+    LOG_INFO << "initial XSubTitle";
 }
 
 XSubTitle::~XSubTitle()
@@ -33,7 +32,7 @@ void XSubTitle::Open(QString url)
         m_mSubType = SUBTITLE_TYPE_SRT;
     if(m_mSubTitleFile->open(QIODevice::ReadOnly))  //只读，读取时行尾终止符被转换为'\n'
     {
-        qDebug()<<"open subtitle success";
+        LOG_DEBUG << "open subtitle success";
         subNodelist.clear();
         m_mIsOpen = true;
         while(!m_mSubTitleFile->atEnd())
@@ -84,7 +83,7 @@ void XSubTitle::Open(QString url)
 //        }
         return;
     }
-    qDebug()<<"open subtitle file failed!";
+    LOG_DEBUG << "open subtitle file failed!";
 }
 
 bool XSubTitle::Read(int currentTime)

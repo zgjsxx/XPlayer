@@ -5,19 +5,19 @@ extern "C"
     #include <libavcodec/avcodec.h>
 }
 #include "XResample.h"
-#include "DebugLog.h"
+#include "Logger.h"
 using namespace std;
 //重采样
 
 XResample::XResample()
 {
-    LOG_DBG << "initial XResample" << std::endl;
+    LOG_DEBUG << "Initial XResample";
 }
 
 
 XResample::~XResample()
 {
-
+    LOG_DEBUG << "Destroy XResample";
 }
 
 void XResample::Close()
@@ -34,7 +34,7 @@ void XResample::Close()
 //输出参数和输入参数一致（除了采样格式，其输出为S16）
 bool XResample::Open(AVCodecParameters *para, bool isClearPara)
 {
-    LOG_DBG << "XResample::Open" << std::endl;
+    LOG_DEBUG << "XResample::Open" ;
     if (!para)
     {
        return false;
@@ -45,7 +45,7 @@ bool XResample::Open(AVCodecParameters *para, bool isClearPara)
     //Definition : SwrContext *actx = nullptr;
     //if(!actx)
     //	actx = swr_alloc();
-    LOG_DBG << "swr_alloc_set_opts" << std::endl;
+    LOG_DEBUG << "swr_alloc_set_opts" ;
     //如果actx为NULL，会自动分配空间
     actx = swr_alloc_set_opts(actx,         //resample context
         av_get_default_channel_layout(2),	//输出 layout 5.1声道

@@ -3,7 +3,7 @@
 #include "XAudioPlay.h"
 #include "XResample.h"
 #include "XDecode.h"
-#include "DebugLog.h"
+#include "Logger.h"
 using namespace std;
 
 XAudioThread::XAudioThread():
@@ -11,33 +11,33 @@ XAudioThread::XAudioThread():
     m_pAudioPlay(nullptr),
     XDecodeThread("audio_thread")
 {
-    LOG_DBG << "initial XAudioThread" << std::endl;
+    LOG_INFO << "Initial XAudioThread" ;
     if (m_pResample == nullptr)
     {
-        LOG_DBG << "create Resample object" << std::endl;
+        LOG_DEBUG << "create Resample object" ;
         m_pResample = new XResample();
     }
     else
     {
-        LOG_DBG << "Resample object is not null" << std::endl;
+        LOG_DEBUG << "Resample object is not null" ;
     }
 
     if (!m_pAudioPlay)
     {
+        LOG_DEBUG << "create audioplay object";
         m_pAudioPlay = XAudioPlay::Get();
     }
 }
 
-
 XAudioThread::~XAudioThread()
 {
-    //等待线程退出
+    //wait thread to exit
+    LOG_DEBUG << "exit audio thread";
     isExit = true;
     delete m_pResample;
     m_pResample = nullptr;
     wait();
 }
-
 
 void XAudioThread::Clear()
 {
@@ -75,10 +75,10 @@ void XAudioThread::Close()
 
 bool XAudioThread::Open(AVCodecParameters *para, int sampleRate, int channels)
 {
-    LOG_DBG << "XAudioThread Open" << std::endl;
+    LOG_DEBUG << "XAudioThread Open" ;
     if(!para)
     {
-        LOG_DBG << "No Para" << std::endl;
+        LOG_DEBUG << "No Para";
         return false;
     }
     amux.lock();
@@ -87,14 +87,14 @@ bool XAudioThread::Open(AVCodecParameters *para, int sampleRate, int channels)
 
     if(m_pResample == nullptr)
     {
-        LOG_DBG << "m_pResample is nullptr" << std::endl;
+        LOG_DEBUG << "m_pResample is nullptr" ;
     }
     if(!m_pResample->Open(para,false))
     {
-        LOG_DBG << "XResample open failed!" << std::endl;
+        LOG_DEBUG << "XResample open failed!" ;
         re = false;
     }
-    LOG_DBG << "XResample open success" << std::endl;
+    LOG_DEBUG << "XResample open success" ;
 
     m_pAudioPlay->sampleRate = sampleRate;
     m_pAudioPlay->channels = channels;
@@ -104,16 +104,16 @@ bool XAudioThread::Open(AVCodecParameters *para, int sampleRate, int channels)
         cout << "XAudioPlay open failed!" << endl;
     }
 
-    LOG_DBG << "m_pAudioPlay open success" << std::endl;
+    LOG_DEBUG << "m_pAudioPlay open success" ;
     if (!m_pDecode->Open(para))
     {
         cout << "Audio Decoder open failed!" << endl;
         re = false;
     }
-    LOG_DBG << "m_pDecode open success" << std::endl;
+    LOG_DEBUG << "m_pDecode open success" ;
     amux.unlock();
 
-    LOG_DBG << "Audio decode open success! : " << re << endl;
+    LOG_DEBUG << "Audio decode open success! : " << re << endl;
     return re;
 }
 //暂停
@@ -138,7 +138,7 @@ void XAudioThread::SetVolume(double newVolume)
 
 void XAudioThread::run()
 {
-    LOG_DBG << "XAudioThread start" << std::endl;
+    LOG_DEBUG << "XAudioThread start" ;
     unsigned char *pcm = new unsigned char[1024 * 1024 * 10];
     while (!isExit)
     {

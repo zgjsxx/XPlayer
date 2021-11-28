@@ -4,7 +4,7 @@ extern "C"
     #include<libavcodec/avcodec.h>
 }
 #include "XDecode.h"
-#include "DebugLog.h"
+#include "Logger.h"
 
 XDecode::XDecode()
 {
@@ -56,7 +56,7 @@ bool XDecode::Open(AVCodecParameters *param)
     if(!vcodec)
     {
         avcodec_parameters_free(&param);
-        std::cout << "can't find the codec id " << param->codec_id << std::endl;
+        LOG_WARN << "can't find the codec id " << param->codec_id;
         return false;
     }
     mux.lock();
@@ -78,11 +78,11 @@ bool XDecode::Open(AVCodecParameters *param)
          mux.unlock();
          char buf[1024] = { 0 };
          av_strerror(re, buf, sizeof(buf) - 1);
-         LOG_DBG << "avcodec_open2  failed! :" << buf << std::endl;
+         LOG_DEBUG << "avcodec_open2  failed! :" << buf ;
          return false;
      }
      mux.unlock();
-     LOG_DBG << "avcodec_open2 success!" << std::endl;
+     LOG_DEBUG << "avcodec_open2 success!" ;
      return true;
 }
 /*  解码:
@@ -127,7 +127,7 @@ AVFrame* XDecode::Recv()
         av_frame_free(&frame);
         return NULL;
     }
-    //cout << "["<<frame->linesize[0] << "] " << flush;
+
     pts = frame->pts;
     return frame;
 }

@@ -1,6 +1,6 @@
 #include "XDecode.h"
 #include "XDecodeThread.h"
-#include "DebugLog.h"
+#include "Logger.h"
 
 XDecodeThread::XDecodeThread(std::string name)
 {
@@ -65,7 +65,7 @@ void XDecodeThread::Push(AVPacket *pkt)
 
     if (!pkt)
     {
-        LOG_DBG << "No packet to push" << std::endl;
+        LOG_DEBUG << "No packet to push" ;
         return;
     }
     //进行阻塞——读取比解码快

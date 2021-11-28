@@ -28,6 +28,8 @@ class XPlay : public QObject
     Q_PROPERTY(QString subTitlePath READ subTitlePath WRITE setSubTitlePath NOTIFY subTitlePathChanged)
 
     Q_PROPERTY(QString subTitleText READ subTitleText WRITE setSubTitleText NOTIFY subTitleTextChanged)
+
+    Q_PROPERTY(long long totalPts READ totalPts WRITE getTotalPts WRITE setTotalPts NOTIFY totalPtsChanged)
 public:
     XPlay();
     ~XPlay();
@@ -98,6 +100,9 @@ public:
     QString subTitleText() const;
     void setSubTitleText(QString text);
 
+    long long getTotalPts();
+    void setTotalPts(long long pts) const;
+
 signals:
     void demoNumChanged(int newValue);
     void testNumChanged(int newValue);
@@ -110,6 +115,7 @@ signals:
     void videoPathChanged(QString url);
     void subTitlePathChanged(QString url);
     void subTitleTextChanged(QString text);
+    void totalPtsChanged(QString text);
 
 private:
     int     m_mDemoNum{ 0 };
@@ -124,6 +130,7 @@ private:
     QString     m_strTheVideoPath{ "" };
     QString     m_strSubTitlePath{""};
     QString     m_mSubTitleText{""};
+    long long m_totalPts {0};
 };
 
 #endif // MYPLAY_H

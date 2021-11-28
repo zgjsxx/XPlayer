@@ -1,5 +1,4 @@
 #include "XPlay.h"
-#include <QDebug>
 #include <QSettings>
 #include <QFileInfo>
 #include <QPointer>
@@ -7,15 +6,16 @@
 #include "XVideoOutput.h"
 #include "XSubTitle.h"
 #include <iostream>
-#include "DebugLog.h"
+#include "Logger.h"
 static QScopedPointer<XDemuxThread> dt;
 static QScopedPointer<XSubTitle> st;
 
 XPlay::XPlay()
 {
-    LOG_DBG << "initial XPlay" << std::endl;
+    LOG_DEBUG << "start to initial XPlay" ;
     dt.reset(new XDemuxThread);
     st.reset(new XSubTitle);
+    //demux thread start, also trigger starting audio thread and video thread
     dt->Start();
     startTimer(40);
     setBackGround(NULL);
@@ -25,13 +25,13 @@ XPlay::XPlay()
 
 XPlay::~XPlay()
 {
-    qDebug()<<"close";
+    LOG_INFO<< "close XPlay";
     if(m_mOpenSuccess)
     {
         QSettings *settingIni = new QSettings("setting.ini",QSettings::IniFormat);
-        qDebug()<<m_strTheVideoPath;
         settingIni->setValue("Progress/" + m_strTheVideoPath,dt->pts);
         delete settingIni;
+        LOG_INFO<< "close setting.ini";
     }
     dt->Close();
 }
@@ -41,14 +41,15 @@ void XPlay::testFunc()
     setDemoNum(demoNum() + 1);
 }
 
-//打开线程，传输文件路径
+/*
+ * @brief: open thread and transfer the file path
+*/
 void XPlay::urlPass(QString url)
 {
     XVideoOutput* video =qobject_cast<XVideoOutput*>(source());
     if(video == nullptr)
     {
-        qDebug() << "<" <<QThread::currentThread() << ">"
-                 <<"<Xplay::urlPass> : video is nullptr" <<endl;
+        LOG_DEBUG << "video is nullptr";
     }
 
     m_strTheVideoPath = url;
@@ -58,7 +59,7 @@ void XPlay::urlPass(QString url)
         QString subTitleP = url.left(url.length() - fileInfo.suffix().length());
         QSettings *settingIni = new QSettings("setting.ini",QSettings::IniFormat);
         QString saveProgress = settingIni->value("Progress/" + url).toString();
-        LOG_DBG << "Last play time is " << saveProgress.toStdString() << std::endl;
+        LOG_DEBUG << "Last play time is " << saveProgress ;
         delete settingIni;
         fileInfo = QFileInfo(subTitleP+"srt");     //打开视频时自动查找视频所在文件夹有对应名称的无字幕文件，有则打开
         if(fileInfo.exists())
@@ -67,11 +68,8 @@ void XPlay::urlPass(QString url)
         }
         else
         {
-            qDebug()<<" <Xplay::urlPass> : there is no srt file";
+            LOG_DEBUG << "there is no subtitle file in the dir";
         }
-
-        //if(fileInfo.exists())
-            //st->Open(fileInfo);
 
         //Definition: static QScopedPointer<XDemuxThread> dt;
         if(!dt->Open(url.toLocal8Bit(),video))
@@ -85,17 +83,19 @@ void XPlay::urlPass(QString url)
         }
 
     }
-    std::cout << url.toStdString().data() << std::endl;
+    LOG_DEBUG << "open url path is " << url;
+    m_totalPts = dt->totalMs;
+    LOG_DEBUG << "m_totalPts is " << m_totalPts;
     setIsPlay(!dt->isPause);
     setOpenSuccess(dt->getOpenSuccess());
 }
 
-//播放进度条
+//play slider bar
 void XPlay::posFind(double value)
 {
     double pos = ((double)(int)(((double)dt->pts / (double)dt->totalMs) * 1000)) / 1000;
     double newValue = ((double)(int)(value * 1000)) / 1000;
-    LOG_DBG << "pos value = " << pos << std::endl;
+    LOG_DEBUG << "pos value = " << pos ;
     dt->Seek(newValue);
 }
 
@@ -104,9 +104,7 @@ void XPlay::timerEvent(QTimerEvent *e)
     //if (isSliderPress)return;
     setTestNum(m_mTestNum + 1);
     long long total = dt->totalMs;
-    //qDebug()<<dt->pts;
     int currentTime = (int)dt->pts;
-    //qDebug()<<st->isOpen();
     if(st->isOpen())
     {
         if(!(st->nodeStartTime() <= currentTime && st->nodeEndTime() >= currentTime) || (st->nodeEndTime() == st->nodeStartTime()))   //如果已经读取到现在的节点则没必要在read，或者处于刚开始时需要执行read
@@ -121,46 +119,70 @@ void XPlay::timerEvent(QTimerEvent *e)
         setPosNum(pos);
     }
 }
-//播放暂停
+
+/*
+ * @brief: play or pause the video
+*/
 void XPlay::playOrPause()
 {
     bool isPause = !dt->isPause;
     setIsPlay(!isPause);
     dt->SetPause(isPause);
 }
-//快进
+
+/*
+ * @brief: fast forward the video
+*/
 void XPlay::goOn()
 {
     double pos = ((double)(int)(((double)dt->pts / (double)dt->totalMs) * 1000)) / 1000 + 0.02;   //依照需求调整快进的程度
     dt->Seek(pos);
 }
-//快退
+
+/*
+ * @brief: rewind the video
+*/
 void XPlay::goBack()
 {
     double pos = ((double)(int)(((double)dt->pts / (double)dt->totalMs) * 1000)) / 1000 - 0.02;   //依照需求调整快退的程度
     dt->Seek(pos);
 }
-//改变并储存背景
+
+/*
+ * @brief: change the background
+*/
 void XPlay::changeBackground(QString url)
 {
     setBackGround(url);
 }
-//改变视频选择路径
+
+/*
+ * @brief: change the video path
+*/
 void XPlay::changeVideoPath(QString url)
 {
     setVideoPath(url);
 }
-//改变字幕选择路径
+
+/*
+ * @brief: change the subtitle path
+*/
 void XPlay::changeSubTitlePath(QString url)
 {
     setSubTitlePath(url);
 }
-//改变音量
+
+/*
+ * @brief: change the volume path
+*/
 void XPlay::setVolume(double newVolume)
 {
     dt->SetVolume(((double)(int)(newVolume*100))/100);
 }
-//停止
+
+/*
+ * @brief: stop the video
+*/
 void XPlay::setStop()
 {
     if(m_mOpenSuccess)
@@ -176,7 +198,10 @@ void XPlay::setStop()
         setOpenSuccess(false);
     }
 }
-//加载字幕
+
+/*
+ * @brief: load the subtitle
+*/
 void XPlay::loadSubTitle(QString url)
 {
     if(m_mOpenSuccess)
@@ -290,7 +315,7 @@ void XPlay::setBackGround(QString url)
             m_strBackgroundPath = backGroundpath;
             QFileInfo fileInfo(backGroundpath);
             m_strBackGroundChoosePath = fileInfo.path();
-            qDebug()<<m_strBackGroundChoosePath<<endl;
+            LOG_DEBUG <<m_strBackGroundChoosePath<<endl;
             delete settingIni;
             emit backGroundChanged(m_strBackgroundPath);
             emit backGroundChooseChanged(m_strBackGroundChoosePath);
@@ -302,7 +327,6 @@ void XPlay::setBackGround(QString url)
         settingIni->setValue("Path/Background",url);
         m_strBackgroundPath = url;
         QFileInfo fileInfo(url);
-        //qDebug()<<fileInfo.suffix();
         m_strBackGroundChoosePath = fileInfo.path();
         emit backGroundChanged(m_strBackgroundPath);
         emit backGroundChooseChanged(m_strBackGroundChoosePath);
@@ -394,4 +418,14 @@ void XPlay::setSubTitleText(QString text)
         m_mSubTitleText = text;
         emit subTitleTextChanged(m_mSubTitleText);
     }
+}
+
+long long XPlay::getTotalPts()
+{
+    return m_totalPts;
+}
+
+void XPlay::setTotalPts(long long pts) const
+{
+    m_totalPts = pts;
 }

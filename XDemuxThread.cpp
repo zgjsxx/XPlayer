@@ -1,5 +1,4 @@
 #include <iostream>
-#include <QDebug>
 extern "C"
 {
     #include <libavformat/avformat.h>
@@ -8,22 +7,23 @@ extern "C"
 #include "XDemuxThread.h"
 #include "XDemux.h"
 #include "XVideoThread.h"
-#include "DebugLog.h"
+#include "Logger.h"
 
 XDemuxThread::XDemuxThread()
 {
-    LOG_DBG << "XDemuxThread is created" << std::endl;
+    LOG_INFO << "Initial XDemuxThread";
 }
 
 XDemuxThread::~XDemuxThread()
 {
+    LOG_INFO << "Destroy XDemuxThread";
     isExit = true;
     wait();
 }
 
-
 void XDemuxThread::Start()
 {
+    LOG_INFO << "start DemuxThread";
     mux.lock();
     if(!m_pDemux)
     {
@@ -38,7 +38,7 @@ void XDemuxThread::Start()
     //Definition MYAudioThread *at = 0;
     if(!at)
     {
-        LOG_DBG << "new at" << std::endl;
+        LOG_DEBUG << "new at" ;
         at = new XAudioThread();
     }
     QThread::start();
@@ -63,7 +63,7 @@ void  XDemuxThread::SetVolume(double newVolume)
         return;
     }
     //mux.unlock();
-    qDebug()<<newVolume;
+    LOG_DEBUG << newVolume;
     at->SetVolume(newVolume);
 }
 
@@ -87,7 +87,7 @@ void XDemuxThread::Clear()
 
 void XDemuxThread::run()
 {
-    LOG_DBG << "XDemuxThread start" << std::endl;
+    LOG_DEBUG << "XDemuxThread start";
     while (!isExit)
      {
          mux.lock();
@@ -166,7 +166,7 @@ void XDemuxThread::Seek(double pos)
         AVPacket *pkt = m_pDemux->ReadVideo();
         if (!pkt)
         {
-            LOG_DBG << "No seek packet" << std::endl;
+            LOG_DEBUG << "No seek packet" ;
             break;
         }
 
@@ -209,10 +209,10 @@ bool XDemuxThread::Open(const char *url, IVideoCall *call)
 {
     if(url == 0 || url[0] == '\0')
     {
-        qDebug()<<"file url patch is None"<<endl;
+        LOG_DEBUG << "file url patch is None";
         return false;
     }
-    LOG_DBG << "url path is " << url << std::endl;
+    LOG_DEBUG << "url path is " << url ;
 
     mux.lock();
     if(!m_pDemux){
@@ -224,7 +224,7 @@ bool XDemuxThread::Open(const char *url, IVideoCall *call)
     }
     if(!at)
     {
-        LOG_DBG << "new at" << std::endl;
+        LOG_DEBUG << "new at" ;
         at = new XAudioThread();
     }
     bool re = m_pDemux->Open(url);

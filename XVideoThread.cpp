@@ -1,19 +1,20 @@
 #include <iostream>
 #include "XVideoThread.h"
 #include "XDecode.h"
-#include "DebugLog.h"
+#include "Logger.h"
+
 using namespace std;
 
 XVideoThread::XVideoThread():
     XDecodeThread("video_thread")
 {
-    LOG_DBG << "initial XVideoThread" << std::endl;
+    LOG_INFO << "Initial XVideoThread";
 }
 
 
 XVideoThread::~XVideoThread()
 {
-
+    LOG_INFO << "Destroy XVideoThread";
 }
 
 //打开，不管成功与否都清理
@@ -21,7 +22,7 @@ bool XVideoThread::Open(AVCodecParameters *para, IVideoCall *call, int width, in
 {
     if (!para)
     {
-        LOG_DBG << "No Param" << std::endl;
+        LOG_WARN << "No video param";
         return false;
     }
 
@@ -39,11 +40,10 @@ bool XVideoThread::Open(AVCodecParameters *para, IVideoCall *call, int width, in
     int re = true;
     if (!m_pDecode->Open(para))
     {
-        LOG_DBG << "audio MYDecode open failed!" << std::endl;
+        LOG_WARN << "Video thread decoder open failed";
         re = false;
     }
 
-    LOG_DBG << "XVideoThread::Open :" << re << std::endl;
     return re;
 }
 void XVideoThread::SetPause(bool isPause)
@@ -55,14 +55,13 @@ void XVideoThread::SetPause(bool isPause)
 
 void XVideoThread::run()
 {
-    LOG_DBG << "XVideoThread start" << std::endl;
+    LOG_DEBUG << "XVideoThread start";
     while (!isExit)
     {
         vmux.lock();
 
         if (this->isPause)
         {
-            //LOG_DBG << "Video Thead is pause" << std::endl;
             vmux.unlock();
             msleep(5);
             continue;
@@ -114,7 +113,7 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
     bool re = m_pDecode->Send(pkt);
     if (!re)
     {
-        LOG_DBG << "decode finish" << std::endl;
+        LOG_DEBUG << "decode finish" ;
         vmux.unlock();
         return true;   //表示结束解码
     }
@@ -126,8 +125,8 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
     }
 
 
-    LOG_DBG << "m_pDecode->pts =" << m_pDecode->pts << std::endl;
-    LOG_DBG << "seekpts =" << seekpts << std::endl;
+    LOG_DEBUG << "m_pDecode->pts =" << m_pDecode->pts ;
+    LOG_DEBUG << "seekpts =" << seekpts ;
 //    //到达位置
 //    if (m_pDecode->pts >= seekpts)
 //    {

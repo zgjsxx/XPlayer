@@ -46,7 +46,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     CXAudioPlay.h \
-    DebugLog.h \
     IVideoCall.h \
     Logger.h \
     LoggerTemplate.h \

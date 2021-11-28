@@ -12,14 +12,14 @@ Window {
     visible: true
     width: 800
     height: 600
-    title: qsTr("MuYing Player")
+    title: qsTr("XPlayer")
     property bool fullscreen: false
     property bool isPlaying: xplay.isPlay
     property bool openSuccess: xplay.openSuccess
     property bool timeTrigger: false
     property string language:
     {
-        root.title = qsTr("MuYing Player")
+        root.title = qsTr("XPlayer")
         chooseVideo.title = qsTr("Choose the video.")
         chooseVideo.nameFilters = [qsTr("Video files(*.mp4 *.rmvb *.flv)"),qsTr("All files(*)")]
         chooseSubtitle.title = qsTr("Choose the subtitle.")
@@ -179,16 +179,26 @@ Window {
                 controlAreaHideTimer.start()
             }
         }
+        Label {
+            id: currentTime
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: 370
+            anchors.rightMargin: 370
+            anchors.topMargin: 3
+            text: xplay.m_totalPts
+        }
 
         // 播放进度条
         Slider {
             id: playPos
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
+            anchors.top: currentTime.bottom
             anchors.leftMargin: 50
             anchors.rightMargin: 50
-            anchors.topMargin: 10
+            anchors.topMargin: 3
             stepSize: 0.001
             height: 20
             background: Rectangle {
@@ -272,6 +282,7 @@ Window {
                 if(root.isPlaying == true)
                     isPlayBtnImg.source = "qrc:///image/isPause.png"
                 console.log("You chose: " + chooseVideo.fileUrl.toString().substring(8,chooseVideo.fileUrl.length));
+                console.log("m_totalPts ：" + xplay.totalPts)
             }
             onRejected: {
                 console.log("Canceled");

@@ -3,15 +3,18 @@
 #include <QDir>
 #include <QIcon>
 #include <QFont>
-#include <QDebug>
+#include <QTranslator>
+#include <QSettings>
 #include "MainApp.h"
 #include "XPlay.h"
 #include "XVideoOutput.h"
+#include "Logger.h"
 
 #define APP_NAME                    "XPlayer"
 #define APP_ICON_PATH               ":/image/AppIcon.ico"
 #define APP_DISPLAYNAME             "XPlayer"
 #define UI_MAIN_PATH                "qrc:/qml/main.qml"
+#define UI_TRANSLATION_PATH         ":/translation/XPlayer_zh_CN.qm"
 #define IMAGEDIR_RELATIVE_PATH      "./resource/ui/image"
 #define DEFAULT_FONT_NAME           "\xE5\xBE\xAE\xE8\xBD\xAF\xE9\x9B\x85\xE9\xBB\x91"// 微软雅黑
 
@@ -34,13 +37,14 @@ MainApp::MainApp(int &argc, char **argv)
        , m_strAppRootPath()
        , m_strImageRootPath()
 {
+
 }
 
 int MainApp::Main(int argc, char *argv[])
 {
     if(!Initialize())
     {
-        qDebug()<<"Initialize failed, exit...";
+        LOG_DEBUG << "Initialize failed, exit...";
         Uninitialize();
         return EXIT_FAILURE;
     }
@@ -62,17 +66,17 @@ bool MainApp::Initialize()
 
     if (!InitializeQmlEngine())
     {
-        qDebug()<<"initialize QmlEngine failed";
+        LOG_DEBUG << "initialize QmlEngine failed";
         return false;
     }
     // Initialize UI
     if (!InitializeUI(m_pQmlEngine.data()))
     {
-        qDebug()<<"initialize UI failed";
+        LOG_DEBUG << "initialize UI failed";
         return false;
     }
 
-    qDebug()<<"initialize everything successfully";
+    LOG_DEBUG << "initialize everything successfully";
     return true;
 
 }
@@ -133,6 +137,56 @@ bool MainApp::InitializeUI(QQmlApplicationEngine *pQmlEngine)
     return true;
 
 }
+
+int MainApp::demoNum() const
+{
+    return m_mDemoNum;
+}
+
+void MainApp::setDemoNum(int newValue)
+{
+    if (m_mDemoNum != newValue)
+    {
+        m_mDemoNum = newValue;
+        emit demoNumChanged(m_mDemoNum);
+    }
+}
+
+QString MainApp::language() const
+{
+    return m_mLanguage;
+}
+
+void MainApp::setLanguage(QString newValue)
+{
+    if (m_mLanguage != newValue)
+    {
+        m_mLanguage = newValue;
+        emit languageChanged(m_mLanguage);
+    }
+}
+
+void MainApp::changeLanuage(QString language)
+{
+    if(language == MainApp::language())
+        return;
+    LOG_DEBUG << language<<endl;
+    m_pTranslator.reset(new QTranslator);
+    QSettings *settingIni = new QSettings("setting.ini",QSettings::IniFormat);
+    settingIni->setValue("Config/Language",language);
+    if(language == "Chinese")
+    {
+        if (!m_pTranslator->load(QStringLiteral(UI_TRANSLATION_PATH)))
+            {return;}
+        // Add translator
+        installTranslator(m_pTranslator.data());
+    }
+    if(language == "English")
+        installTranslator(m_pTranslator.data());
+    setLanguage(language);
+    delete settingIni;
+}
+
 
 MainApp::~MainApp() = default;
 
