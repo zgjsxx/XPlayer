@@ -29,7 +29,7 @@ This project is constructed with Qt 5.12.9. So it is recommended to install it w
 
 Open the XPlayer.pro in Qt creator and then simple run it with the debug mode.
 
-![image-20211128212223261](C:\Users\xu_zhang\AppData\Roaming\Typora\typora-user-images\image-20211128212223261.png)
+![player](doc/img/build.png)
 
 If everything goes well, it will show you the main UI.
 
