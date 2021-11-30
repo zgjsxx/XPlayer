@@ -53,6 +53,7 @@ void XPlay::urlPass(QString url)
     }
 
     m_strTheVideoPath = url;
+    changeVideoPath(url);
     if(video != nullptr)
     {
         QFileInfo fileInfo(url);
@@ -420,12 +421,12 @@ void XPlay::setSubTitleText(QString text)
     }
 }
 
-long long XPlay::getTotalPts()
+long long XPlay::getTotalPts() const
 {
     return m_totalPts;
 }
 
-void XPlay::setTotalPts(long long pts) const
+void XPlay::setTotalPts(long long pts)
 {
     m_totalPts = pts;
 }

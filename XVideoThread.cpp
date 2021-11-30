@@ -71,8 +71,8 @@ void XVideoThread::run()
         if (synpts >0 && synpts < m_pDecode->pts)
         {
             //音频落后于视频
-            //LOG_DBG << "synpts is " << synpts << std::endl;
-            //LOG_DBG << "m_pDecode->pts is " << m_pDecode->pts << std::endl;
+            //LOG_DEBUG << "synpts is " << synpts ;
+            //LOG_DEBUG << "m_pDecode->pts is " << m_pDecode->pts ;
             vmux.unlock();
             msleep(1);
             continue;
@@ -125,8 +125,8 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
     }
 
 
-    LOG_DEBUG << "m_pDecode->pts =" << m_pDecode->pts ;
-    LOG_DEBUG << "seekpts =" << seekpts ;
+    //LOG_DEBUG << "m_pDecode->pts =" << m_pDecode->pts ;
+    //LOG_DEBUG << "seekpts =" << seekpts ;
 //    //到达位置
 //    if (m_pDecode->pts >= seekpts)
 //    {
@@ -142,7 +142,7 @@ bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
 
     MYFreeFrame(&frame);
     vmux.unlock();
-    return false;
+    return true;
 }
 
 

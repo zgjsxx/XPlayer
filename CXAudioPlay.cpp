@@ -1,4 +1,5 @@
 #include "CXAudioPlay.h"
+#include "Logger.h"
 void CXAudioPlay::SetVolume(double newVolume)
 {
     // Definition: QAudioOutput *output = NULL;
@@ -11,6 +12,7 @@ void CXAudioPlay::SetVolume(double newVolume)
      * Sets the output volume to volume.
      * The volume is scaled linearly from 0.0 (silence) to 1.0 (full volume). Values outside this range will be clamped.
     */
+    LOG_DEBUG << "set volume: " << newVolume;
     output->setVolume(newVolume);
 }
 
@@ -82,7 +84,10 @@ bool CXAudioPlay::Open()
     fmt.setChannelCount(channels);
     fmt.setCodec("audio/pcm");
     fmt.setByteOrder(QAudioFormat::LittleEndian);
-    fmt.setSampleType(QAudioFormat::UnSignedInt);
+    //fmt.setSampleType(QAudioFormat::UnSignedInt);
+    //change from UnsignInt to signInt, because of the big noise
+    //https://stackoverflow.com/questions/32821706/noise-after-changing-volume-in-qaudiooutput
+    fmt.setSampleType(QAudioFormat::SignedInt);
     mux.lock();
     output = new QAudioOutput(fmt);
     io = output->start();

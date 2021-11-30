@@ -63,7 +63,7 @@ void  XDemuxThread::SetVolume(double newVolume)
         return;
     }
     //mux.unlock();
-    LOG_DEBUG << newVolume;
+    LOG_DEBUG << "after change volume, volume is :" <<newVolume;
     at->SetVolume(newVolume);
 }
 
@@ -115,6 +115,7 @@ void XDemuxThread::run()
          AVPacket *pkt = m_pDemux->Read();
          if (!pkt)
          {
+             //LOG_DEBUG << "no pkt" ;
              mux.unlock();
              msleep(5);
              continue;
@@ -125,6 +126,7 @@ void XDemuxThread::run()
              //audio pkt
              if (at)
              {
+                 //LOG_DEBUG << "push audio";
                  at->Push(pkt);
              }
          }
@@ -133,6 +135,7 @@ void XDemuxThread::run()
              //video pkt
              if (vt)
              {
+                 //LOG_DEBUG << "push video";
                  vt->Push(pkt);
              }
          }
@@ -171,6 +174,8 @@ void XDemuxThread::Seek(double pos)
         }
 
         //如果解码到seekPts
+        //LOG_DEBUG << "REPAINT" ;
+        //update the video pts to sync audio
         if (vt->RepaintPts(pkt, seekPts))
         {
             this->pts = seekPts;

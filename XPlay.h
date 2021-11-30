@@ -29,7 +29,7 @@ class XPlay : public QObject
 
     Q_PROPERTY(QString subTitleText READ subTitleText WRITE setSubTitleText NOTIFY subTitleTextChanged)
 
-    Q_PROPERTY(long long totalPts READ totalPts WRITE getTotalPts WRITE setTotalPts NOTIFY totalPtsChanged)
+    Q_PROPERTY(long long totalPts READ getTotalPts  WRITE setTotalPts NOTIFY totalPtsChanged)
 public:
     XPlay();
     ~XPlay();
@@ -100,8 +100,8 @@ public:
     QString subTitleText() const;
     void setSubTitleText(QString text);
 
-    long long getTotalPts();
-    void setTotalPts(long long pts) const;
+    long long getTotalPts() const;
+    void setTotalPts(long long pts) ;
 
 signals:
     void demoNumChanged(int newValue);

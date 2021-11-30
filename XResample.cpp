@@ -48,12 +48,12 @@ bool XResample::Open(AVCodecParameters *para, bool isClearPara)
     LOG_DEBUG << "swr_alloc_set_opts" ;
     //如果actx为NULL，会自动分配空间
     actx = swr_alloc_set_opts(actx,         //resample context
-        av_get_default_channel_layout(2),	//输出 layout 5.1声道
-        (AVSampleFormat)m_outFormat,	    //输出样本格式 1 AV_SAMPLE_FMT_S16
-        para->sample_rate,					//输出采样率
-        av_get_default_channel_layout(para->channels),//输入layout
-        (AVSampleFormat)para->format,       //输入的样本格式
-        para->sample_rate,                  //输入的样本率
+        av_get_default_channel_layout(para->channels),	//output layout
+        (AVSampleFormat)m_outFormat,	    //output format 1 AV_SAMPLE_FMT_S16
+        para->sample_rate,					//output sample rate
+        av_get_default_channel_layout(para->channels),//input layout
+        (AVSampleFormat)para->format,       //input format
+        para->sample_rate,                  //input sample rate
         0,
         0
     );

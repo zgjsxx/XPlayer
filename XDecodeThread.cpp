@@ -78,6 +78,10 @@ void XDecodeThread::Push(AVPacket *pkt)
             mux.unlock();
             break;
         }
+        else
+        {
+            //LOG_DEBUG << QString::fromStdString(m_name)  << " queue is full";
+        }
 
         mux.unlock();
         msleep(1);

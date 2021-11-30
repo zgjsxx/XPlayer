@@ -153,6 +153,39 @@ Window {
         }
     }
     Item {
+        id: controlAreaFile
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        height: root.controlAreaHeight
+        width: 100
+        visible: false
+        Rectangle {
+            anchors.fill: parent
+            color: "gray"
+        }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: {
+                // 鼠标进去控制区, 关闭定时器
+                controlFileAreaHideTimer.stop()
+            }
+            onExited: {
+                // 鼠标离开控制区, 启动定时器, 时间到则隐藏控制区
+                controlFileAreaHideTimer.start()
+            }
+        }
+    }
+    Timer {
+        id: controlFileAreaHideTimer
+        interval: root.controlAreaAutoHideInterval
+        onTriggered: {
+            controlArea.visible = false
+        }
+
+
+    Item {
         id: controlArea
         anchors.left: parent.left
         anchors.right: parent.right
@@ -179,26 +212,15 @@ Window {
             }
         }
         Text {
-            id: currentFile
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.leftMargin: root.width*0.02
-            anchors.rightMargin: root.width*0.47
-            anchors.topMargin: 3
-            text: ""
-        }
-        Text {
             id: currentTime
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: currentFile.bottom
+            anchors.top: parent.top
             anchors.leftMargin: root.width*0.47
             anchors.rightMargin: root.width*0.47
-            anchors.topMargin: 3
+            anchors.topMargin: 6
             text: "00:00/00:00"
         }
-
 
         // 播放进度条
         Slider {
@@ -246,12 +268,12 @@ Window {
 
                 var total_time_s = xplay.totalPts/1000;
                 total_hour = total_time_s/3600;
-                total_minute = total_time_s/60 - total_hour*60;
+                total_minute = total_time_s/60;
                 total_second = total_time_s % 60;
 
                 var current_time_s = xplay.totalPts*value/1000;
                 current_hour = current_time_s/3600;
-                current_minute = current_time_s/60 - current_hour*60;
+                current_minute = current_time_s/60;
                 current_second = current_time_s % 60;
                 var current_play_time = current_hour.toString()+ ":" + current_minute.toString() + ":" + current_second.toString()+"/"+total_hour.toString()+ ":" + total_minute.toString() + ":" + total_second.toString()
                 currentTime.text = current_play_time
@@ -307,7 +329,6 @@ Window {
             onAccepted: {
                 xplay.urlPass(chooseVideo.fileUrl.toString().substring(8,chooseVideo.fileUrl.length))
                 xplay.changeVideoPath(chooseVideo.fileUrl.toString().substring(8,chooseVideo.fileUrl.length))
-                currentFile.text = chooseVideo.fileUrl.toString()
                 if(root.isPlaying == true)
                     isPlayBtnImg.source = "qrc:///image/isPause.png"
                 console.log("You chose: " + chooseVideo.fileUrl.toString().substring(8,chooseVideo.fileUrl.length));
@@ -542,7 +563,6 @@ Window {
                 console.log(backGround.source)
                 backGround.source = chooseSkin.fileUrl;
                 xplay.changeBackground(chooseSkin.fileUrl.toString().substring(8,chooseSkin.fileUrl.length))
-                currentFile.value = chooseSkin.fileUrl.toString()
                 console.log("You chose: " + chooseSkin.fileUrl);
             }
             onRejected: {
@@ -630,8 +650,8 @@ Window {
             }
             onValueChanged:{
                 console.log("volume percent is ", value)
-                //if(value == 0 || value == 1)
-                xplay.setVolume(value)
+                if(value == 0 || value == 1)
+                    xplay.setVolume(value)
             }
         }
     }
