@@ -34,6 +34,7 @@ Open the XPlayer.pro in Qt creator and then simple run it with the debug mode.
 If everything goes well, it will show you the main UI.
 
 ![player](doc/img/player.png)
+![playe2r](doc/img/player2.png)
 
 ## 3. Framework
 

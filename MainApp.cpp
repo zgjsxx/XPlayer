@@ -11,7 +11,7 @@
 #include "Logger.h"
 
 #define APP_NAME                    "XPlayer"
-#define APP_ICON_PATH               ":/image/AppIcon.ico"
+#define APP_ICON_PATH               "qrc:/image/AppIcon.ico"
 #define APP_DISPLAYNAME             "XPlayer"
 #define UI_MAIN_PATH                "qrc:/qml/main.qml"
 #define UI_TRANSLATION_PATH         ":/translation/XPlayer_zh_CN.qm"
@@ -58,7 +58,12 @@ int MainApp::Main(int argc, char *argv[])
 bool MainApp::Initialize()
 {
     setApplicationName(QStringLiteral(APP_NAME));
-    setWindowIcon(QIcon(QStringLiteral(APP_ICON_PATH)));
+
+
+    //setWindowIcon(QIcon(QStringLiteral("D:\\self-learning\\XPlayer_proj\\XPlayer\\AppIcon.ico")));
+    setWindowIcon(QIcon(":/image/AppIcon.png"));
+
+
     setApplicationDisplayName(tr(APP_DISPLAYNAME));
     // Initialize Path
     InitializePath();
@@ -132,6 +137,7 @@ bool MainApp::InitializeUI(QQmlApplicationEngine *pQmlEngine)
 
     pQmlEngine->load(QUrl(QStringLiteral(UI_MAIN_PATH)));
 
+
 //    QList<QObject*> rootObjs(pQmlEngine->rootObjects());
 //    return !rootObjs.isEmpty();;
     return true;
@@ -170,7 +176,7 @@ void MainApp::changeLanuage(QString language)
 {
     if(language == MainApp::language())
         return;
-    LOG_DEBUG << language<<endl;
+    LOG_DEBUG << language;
     m_pTranslator.reset(new QTranslator);
     QSettings *settingIni = new QSettings("setting.ini",QSettings::IniFormat);
     settingIni->setValue("Config/Language",language);

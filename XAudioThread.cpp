@@ -152,10 +152,7 @@ void XAudioThread::run()
         }
 
         AVPacket *pkt = Pop();
-        if(pkt == nullptr)
-        {
-            //LOG_DBG << "pkt is null" << std::endl;
-        }
+
         bool re = m_pDecode->Send(pkt);
         if (!re)
         {
@@ -164,20 +161,18 @@ void XAudioThread::run()
             msleep(1);
             continue;
         }
-        //一次send 多次recv
+
         while (!isExit)
         {
             AVFrame * frame = m_pDecode->Recv();
             if (!frame)
             {
-                //LOG_DBG << "break" <<std::endl;
                 break;
             }
 
             //减去缓冲中未播放的时间
             pts = m_pDecode->pts - m_pAudioPlay->GetNoPlayMs();
-            //LOG_DBG << "audio pts = " << pts << endl;
-            //重采样
+            //resample audio
             int size = m_pResample->Resample(frame, pcm);
             //LOG_DBG << "size = " << size << endl;
             //播放音频

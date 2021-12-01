@@ -195,6 +195,7 @@ bool XDemux::Seek(double pos)
     LOG_DEBUG << "duration is " << ic->streams[m_videoStreamIndex]->duration ;
 
     int re = av_seek_frame(ic, m_videoStreamIndex, seekPos, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
+
     mux.unlock();
     if (re < 0)
     {

@@ -16,5 +16,6 @@
         <file alias="smallVoice.png">ui/image/smallVoice.png</file>
         <file alias="subTitle.png">ui/image/subTitle.png</file>
         <file alias="zeroVoice.png">ui/image/zeroVoice.png</file>
+        <file alias="AppIcon.png">ui/image/AppIcon.png</file>
     </qresource>
 </RCC>

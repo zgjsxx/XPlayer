@@ -51,7 +51,7 @@ bool XDecode::Open(AVCodecParameters *param)
         return false;
     }
     Close();
-    //find the video decoder
+    //find the respect decoder
     AVCodec *vcodec = avcodec_find_decoder(param->codec_id);
     if(!vcodec)
     {
@@ -127,7 +127,6 @@ AVFrame* XDecode::Recv()
         av_frame_free(&frame);
         return NULL;
     }
-
     pts = frame->pts;
     return frame;
 }

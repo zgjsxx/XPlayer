@@ -8,6 +8,7 @@ extern "C"
 #include "XDemux.h"
 #include "XVideoThread.h"
 #include "Logger.h"
+#include "XDecode.h"
 
 XDemuxThread::XDemuxThread()
 {
@@ -159,31 +160,21 @@ void XDemuxThread::Seek(double pos)
     {
         m_pDemux->Seek(pos);
     }
+    //flush the codec buffer
+    avcodec_flush_buffers(vt->m_pDecode->codec);
+    avcodec_flush_buffers(at->m_pDecode->codec);
+
+    //remove the packet in the queue
+    vt->clearPacket();
+    at->clearPacket();
+
+    vt->m_bIsFirstSeekFrame = true;
+    LOG_DEBUG << "first video seek frame do not sync" ;
 
     mux.unlock();
-    //实际要显示的位置pts
-    long long seekPts = pos * m_pDemux->m_totalMs;
 
-    while (!isExit)
-    {
-        AVPacket *pkt = m_pDemux->ReadVideo();
-        if (!pkt)
-        {
-            LOG_DEBUG << "No seek packet" ;
-            break;
-        }
 
-        //如果解码到seekPts
-        //LOG_DEBUG << "REPAINT" ;
-        //update the video pts to sync audio
-        if (vt->RepaintPts(pkt, seekPts))
-        {
-            this->pts = seekPts;
-            break;
-        }
-    }
-
-    //seek是非暂停状态
+    //if the current status is pause,set it to start
     if (!status)
     {
         SetPause(false);

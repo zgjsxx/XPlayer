@@ -88,3 +88,9 @@ void XDecodeThread::Push(AVPacket *pkt)
     }
 }
 
+void XDecodeThread::clearPacket()
+{
+    mux.lock();
+    m_packs.clear();
+    mux.unlock();
+}

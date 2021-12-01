@@ -184,9 +184,11 @@ Window {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.leftMargin: root.width*0.02
-            anchors.rightMargin: root.width*0.47
+            anchors.rightMargin: root.width*0.02
             anchors.topMargin: 3
             text: ""
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
         Text {
             id: currentTime
@@ -242,7 +244,7 @@ Window {
                 border.color: "black"
             }
             onValueChanged: {
-                console.log("play percent is ", value)
+                //console.log("play percent is ", value)
 
                 var total_time_s = xplay.totalPts/1000;
                 total_hour = total_time_s/3600;

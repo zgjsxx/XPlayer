@@ -2,6 +2,10 @@
 #include "XVideoThread.h"
 #include "XDecode.h"
 #include "Logger.h"
+extern "C"
+{
+    #include<libavcodec/avcodec.h>
+}
 
 using namespace std;
 
@@ -68,13 +72,12 @@ void XVideoThread::run()
         }
 
         //音视频同步
-        if (synpts >0 && synpts < m_pDecode->pts)
+        if (synpts >0 && synpts < m_pDecode->pts && !m_bIsFirstSeekFrame)
         {
-            //音频落后于视频
-            //LOG_DEBUG << "synpts is " << synpts ;
-            //LOG_DEBUG << "m_pDecode->pts is " << m_pDecode->pts ;
+            //the audio is behind the video
+            //if the m_bIsFirstSeekFrame is true, not sync with audio,because the video pts is not update now
             vmux.unlock();
-            msleep(1);
+            msleep(10);
             continue;
         }
 
@@ -95,6 +98,8 @@ void XVideoThread::run()
             {
                 break;
             }
+            //
+            m_bIsFirstSeekFrame = false;
             //显示视频
             if (call)
             {
@@ -106,43 +111,7 @@ void XVideoThread::run()
     }
 }
 
-//解码pts，如果接受到的解码数据pts > seekpts 返回true  并且显示画面
-bool XVideoThread::RepaintPts(AVPacket *pkt, long long seekpts)
+void XVideoThread::revisePts(long long pts)
 {
-    vmux.lock();
-    bool re = m_pDecode->Send(pkt);
-    if (!re)
-    {
-        LOG_DEBUG << "decode finish" ;
-        vmux.unlock();
-        return true;   //表示结束解码
-    }
-    AVFrame *frame = m_pDecode->Recv();
-    if (!frame)
-    {
-        vmux.unlock();
-        return false;
-    }
-
-
-    //LOG_DEBUG << "m_pDecode->pts =" << m_pDecode->pts ;
-    //LOG_DEBUG << "seekpts =" << seekpts ;
-//    //到达位置
-//    if (m_pDecode->pts >= seekpts)
-//    {
-//        if (call)
-//        {
-//            call->Repaint(frame);
-//        }
-//        LOG_DBG << "Repaint suc" << std::endl;
-//        vmux.unlock();
-//        return true;
-//    }
-
-
-    MYFreeFrame(&frame);
-    vmux.unlock();
-    return true;
+    m_pDecode->pts = pts;
 }
-
-

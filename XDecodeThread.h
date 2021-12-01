@@ -16,12 +16,13 @@ public:
     virtual void Clear();
     virtual void Close();
     virtual AVPacket *Pop();
+    void clearPacket();
 public:
     const int MAXLISTSIZE = 100;
     bool isExit = false;
     std::string m_name;
-protected:
     XDecode *m_pDecode = 0;
+protected:
     std::list<AVPacket *> m_packs;
     std::mutex mux;
 };

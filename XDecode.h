@@ -26,8 +26,8 @@ public:
 public:
     bool isAudio = false;
     long long pts = 0;
-protected:
     AVCodecContext *codec = 0;
+protected:
     std::mutex mux;
 };
 #endif // XDECODE_H
