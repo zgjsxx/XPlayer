@@ -153,7 +153,6 @@ void XDemuxThread::Seek(double pos)
     bool status = this->isPause;
     mux.unlock();
 
-    //暂停
     SetPause(true);
     mux.lock();
     if (m_pDemux)
@@ -161,8 +160,11 @@ void XDemuxThread::Seek(double pos)
         m_pDemux->Seek(pos);
     }
     //flush the codec buffer
-    avcodec_flush_buffers(vt->m_pDecode->codec);
-    avcodec_flush_buffers(at->m_pDecode->codec);
+    if(openSuccess)
+    {
+        avcodec_flush_buffers(vt->m_pDecode->codec);
+        avcodec_flush_buffers(at->m_pDecode->codec);
+    }
 
     //remove the packet in the queue
     vt->clearPacket();

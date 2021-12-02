@@ -7,17 +7,17 @@ extern "C"
 #include "XResample.h"
 #include "Logger.h"
 using namespace std;
-//重采样
+
 
 XResample::XResample()
 {
-    LOG_DEBUG << "Initial XResample";
+    LOG_INFO << "Initial XResample";
 }
 
 
 XResample::~XResample()
 {
-    LOG_DEBUG << "Destroy XResample";
+    LOG_INFO << "Destroy XResample";
 }
 
 void XResample::Close()
@@ -40,20 +40,21 @@ bool XResample::Open(AVCodecParameters *para, bool isClearPara)
        return false;
     }
     mux.lock();
-    //音频重采样 上下文初始化
+
+    //if actx is NULL, will assign space automatically
+
+    //Pay attention to: the input layout channel should be same with out layout channel,
+    //the 2nd paramter(av_get_default_channel_layout(para->channels)) and 5th parameter(av_get_default_channel_layout(para->channels))
+    //if not same,for the audio will lose some info.
 
     //Definition : SwrContext *actx = nullptr;
-    //if(!actx)
-    //	actx = swr_alloc();
-    LOG_DEBUG << "swr_alloc_set_opts" ;
-    //如果actx为NULL，会自动分配空间
-    actx = swr_alloc_set_opts(actx,         //resample context
+    actx = swr_alloc_set_opts(actx,                     //resample context
         av_get_default_channel_layout(para->channels),	//output layout
-        (AVSampleFormat)m_outFormat,	    //output format 1 AV_SAMPLE_FMT_S16
-        para->sample_rate,					//output sample rate
-        av_get_default_channel_layout(para->channels),//input layout
-        (AVSampleFormat)para->format,       //input format
-        para->sample_rate,                  //input sample rate
+        (AVSampleFormat)m_outFormat,	                //output format 1 AV_SAMPLE_FMT_S16
+        para->sample_rate,					            //output sample rate
+        av_get_default_channel_layout(para->channels),  //input layout
+        (AVSampleFormat)para->format,                   //input format
+        para->sample_rate,                              //input sample rate
         0,
         0
     );
@@ -69,7 +70,7 @@ bool XResample::Open(AVCodecParameters *para, bool isClearPara)
     {
         char buf[1024] = { 0 };
         av_strerror(re, buf, sizeof(buf) - 1);
-        cout << "swr_init  failed! :" << buf << endl;
+        LOG_WARN << "swr_init  failed! :" << buf;
         return false;
     }
     //unsigned char *pcm = NULL;

@@ -68,7 +68,7 @@ void XDecodeThread::Push(AVPacket *pkt)
         LOG_DEBUG << "No packet to push" ;
         return;
     }
-    //进行阻塞——读取比解码快
+    //push the packet into queue
     while (!isExit)
     {
         mux.lock();

@@ -211,7 +211,7 @@ Window {
             anchors.leftMargin: 50
             anchors.rightMargin: 50
             anchors.topMargin: 3
-            stepSize: 0.001
+            stepSize: 0.00002
             height: 20
             property int total_hour:0
             property int total_minute:0

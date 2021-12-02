@@ -18,7 +18,7 @@ public:
     virtual AVPacket *Pop();
     void clearPacket();
 public:
-    const int MAXLISTSIZE = 100;
+    const int MAXLISTSIZE = 200;
     bool isExit = false;
     std::string m_name;
     XDecode *m_pDecode = 0;

@@ -17,7 +17,7 @@ XPlay::XPlay()
     st.reset(new XSubTitle);
     //demux thread start, also trigger starting audio thread and video thread
     dt->Start();
-    startTimer(40);
+    startTimer(10);
     setBackGround(NULL);
     setVideoPath(NULL);
     setSubTitlePath(NULL);
@@ -100,9 +100,12 @@ void XPlay::posFind(double value)
     dt->Seek(newValue);
 }
 
+/*
+ * @brief: timerEvent function is used to move the play slider bar postion.
+ *         It is trggier by timeevent which is set by startTimer(int)
+*/
 void XPlay::timerEvent(QTimerEvent *e)
 {
-    //if (isSliderPress)return;
     setTestNum(m_mTestNum + 1);
     long long total = dt->totalMs;
     int currentTime = (int)dt->pts;
@@ -110,13 +113,18 @@ void XPlay::timerEvent(QTimerEvent *e)
     {
         if(!(st->nodeStartTime() <= currentTime && st->nodeEndTime() >= currentTime) || (st->nodeEndTime() == st->nodeStartTime()))   //如果已经读取到现在的节点则没必要在read，或者处于刚开始时需要执行read
             if(st->Read(currentTime))
+            {
                 setSubTitleText(st->text());
+            }
             else
+            {
                 setSubTitleText("");
+            }
+
     }
     if (total > 0)
     {
-        double pos = ((double)(int)(((double)dt->pts / (double)total) * 1000)) / 1000;     //保留三位小数，后面置0，方便比较
+        double pos = (double)dt->pts / (double)total;
         setPosNum(pos);
     }
 }
