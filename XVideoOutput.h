@@ -28,6 +28,7 @@ private:
     std::mutex  mux;
     QImage m_oVideoFrame;
     SwsContext*  m_pSwsContext{nullptr};
+    uint8_t *m_pRGBBuffer{nullptr};
 
 };
 
