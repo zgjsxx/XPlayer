@@ -123,10 +123,10 @@ static void outputMessage(QtMsgType type, const QMessageLogContext& context, con
     Q_UNUSED(context);
     QDateTime dt = QDateTime::currentDateTime();
 
-    //每小时一个文件
+    //one file an hour
     QString fileNameDt = dt.toString("yyyy-MM-dd_hh");
 
-    //每分钟一个文件
+    //one file a minute
     //QString fileNameDt = dt.toString("yyyy-MM-dd_hh_mm");
 
     QString contentDt = dt.toString("yyyy-MM-dd hh:mm:ss");

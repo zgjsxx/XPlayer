@@ -124,7 +124,7 @@ void XAudioThread::SetPause(bool isPause)
     //amux.unlock();
 }
 
-//改变音量
+//change volume
 void XAudioThread::SetVolume(double newVolume)
 {
     if(!m_pAudioPlay)

@@ -43,9 +43,9 @@ public:
     Q_INVOKABLE void posFind(double value);
     //pause the player
     Q_INVOKABLE void playOrPause();
-    //快进
+    //speed
     Q_INVOKABLE void goOn();
-    //快退
+    //fast backword
     Q_INVOKABLE void goBack();
     //change the background
     Q_INVOKABLE void changeBackground(QString url);
@@ -57,7 +57,7 @@ public:
     Q_INVOKABLE void setVolume(double newVolume);
     //stop the play
     Q_INVOKABLE void setStop();
-    //加载字幕
+    //load subtitle
     Q_INVOKABLE void loadSubTitle(QString url);
 
     //a timer to let the play slider move

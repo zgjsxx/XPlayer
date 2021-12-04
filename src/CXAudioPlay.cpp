@@ -133,7 +133,7 @@ void CXAudioPlay::SetPause(bool isPause)
     mux.unlock();
 }
 
-//播放音频
+//play audio
 bool CXAudioPlay::Write(const unsigned char *data, int datasize)
 {
     if (!data || datasize <= 0)return false;
