@@ -225,6 +225,9 @@ bool XDemuxThread::Open(const char *url, IVideoCall *call)
         LOG_DEBUG << "new at" ;
         at = new XAudioThread();
     }
+    clearVideoQueue();
+    clearAudioQueue();
+
     bool re = m_pDemux->Open(url);
     if(!re)
     {
@@ -279,4 +282,14 @@ void XDemuxThread::Close()
 bool XDemuxThread::getOpenSuccess()
 {
     return openSuccess;
+}
+
+void XDemuxThread::clearVideoQueue()
+{
+    vt->clearPacket();
+}
+
+void XDemuxThread::clearAudioQueue()
+{
+    at->clearPacket();
 }

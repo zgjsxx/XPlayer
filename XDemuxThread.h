@@ -28,6 +28,8 @@ public:
     void SetVolume(double newVolume);
     void setOpenSuccess(bool value);
     bool getOpenSuccess();
+    void clearVideoQueue();
+    void clearAudioQueue();
 public:
     bool isExit = false;
     long long pts = 0;
