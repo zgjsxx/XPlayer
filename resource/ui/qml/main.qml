@@ -638,7 +638,7 @@ Window {
         }
     }
 
-    //语言选择弹出框
+    //language dialog
     Dialog {
         id: languageDialog
         title: qsTr("Language")

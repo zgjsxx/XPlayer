@@ -112,7 +112,7 @@ bool XAudioThread::Open(AVCodecParameters *para, int sampleRate, int channels)
     LOG_DEBUG << "Audio decode open success! : " << re << endl;
     return re;
 }
-//暂停
+//pause
 void XAudioThread::SetPause(bool isPause)
 {
     //amux.lock();

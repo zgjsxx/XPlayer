@@ -21,6 +21,7 @@ public:
     virtual void SetPause(bool isPause) override;
     virtual bool Write(const unsigned char *data, int datasize) override;
     virtual int GetFree() override;
+
 public:
     QAudioOutput *output = NULL;
     QIODevice *io = NULL;

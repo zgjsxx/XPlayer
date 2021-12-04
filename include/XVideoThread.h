@@ -25,7 +25,7 @@ public:
 
 public:
     bool isPause = false;
-    //同步时间，由外部传入
+    //sync time, from audio thread, means the pts of the audio
     long long synpts = 0;
     std::mutex vmux;
     bool m_bIsFirstSeekFrame = false;

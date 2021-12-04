@@ -37,30 +37,30 @@ public:
     // For QML invokable function(s)
     Q_INVOKABLE void testFunc();
 
-    //打开线程，传输文件路径
+    //open thread, pass the file path(can accept rtmp url)
     Q_INVOKABLE void urlPass(QString url);
-    //播放进度条
+    //play postion slider
     Q_INVOKABLE void posFind(double value);
-    //播放暂停
+    //pause the player
     Q_INVOKABLE void playOrPause();
     //快进
     Q_INVOKABLE void goOn();
     //快退
     Q_INVOKABLE void goBack();
-    //改变储存背景
+    //change the background
     Q_INVOKABLE void changeBackground(QString url);
-    //改变视频选择路径
+    //change the video path
     Q_INVOKABLE void changeVideoPath(QString url);
-    //改变字幕选择路径
+    //change the subtitle path
     Q_INVOKABLE void changeSubTitlePath(QString url);
-    //改变音量
+    //change the volume
     Q_INVOKABLE void setVolume(double newVolume);
-    //停止
+    //stop the play
     Q_INVOKABLE void setStop();
     //加载字幕
     Q_INVOKABLE void loadSubTitle(QString url);
 
-    //定时器 滑动条显示
+    //a timer to let the play slider move
     void timerEvent(QTimerEvent *e);
 
     QObject *source() const;
