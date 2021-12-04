@@ -6,6 +6,7 @@ class XAudioPlay
 public:
     XAudioPlay();
     virtual ~XAudioPlay();
+
 public:
     virtual bool Open() = 0;
     virtual void Close() = 0;
@@ -16,6 +17,7 @@ public:
     virtual void SetPause(bool isPause) = 0;
     virtual void SetVolume(double newVolume) = 0;
     static XAudioPlay *Get();
+
 public:
     int sampleRate = 44100;
     int sampleSize = 16;

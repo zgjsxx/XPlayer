@@ -17,9 +17,11 @@ public:
     virtual bool Open(AVCodecParameters *para, bool isClearPara = false);
     virtual void Close();
     virtual int Resample(AVFrame *indata,unsigned char *data);
+
 public:
     int m_outFormat = 1;
-protected:
+
+private:
     std::mutex mux;
     SwrContext *actx = nullptr;
 };

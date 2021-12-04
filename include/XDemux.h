@@ -15,18 +15,13 @@ public:
 
 public:
     virtual bool Open(const char *url);
-
-    virtual AVPacket *Read();
-
+    virtual AVPacket *Read();   
     virtual AVPacket *ReadVideo();
-
+    virtual bool Seek(double pos);
     virtual bool IsAudio(AVPacket *pkt);
 
     virtual AVCodecParameters *CopyVideoParam();
-
     virtual AVCodecParameters *CopyAudioParam();
-
-    virtual bool Seek(double pos);
 
     virtual void Clear();
     virtual void Close();
@@ -38,7 +33,8 @@ public:
     int m_height = 0;
     int m_sampleRate = 0;
     int m_channels = 0;
-protected:
+
+private:
     std::mutex mux;
     AVFormatContext *ic = nullptr;
     //video and audio mapping

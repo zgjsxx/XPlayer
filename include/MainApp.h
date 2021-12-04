@@ -18,7 +18,6 @@ class MainApp : public QApplication
 {
     Q_OBJECT
     Q_PROPERTY(int demoNum READ demoNum WRITE setDemoNum NOTIFY demoNumChanged)
-
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
 public:
     static QObject* GetInstance(QQmlEngine* engine, QJSEngine* scriptEngine);
@@ -26,7 +25,6 @@ public:
 public:
     MainApp(int &argc, char** argv);
     ~MainApp() override;
-
     int Main(int argc, char *argv[]);
 
 private:

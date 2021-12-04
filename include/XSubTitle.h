@@ -12,10 +12,10 @@ class XSubTitle : public QObject
  public:
     XSubTitle();
     ~XSubTitle();
+
 public:
     void Open(QString url);
     bool Read(int currentTime);
-
     bool isOpen();
     int nodeStartTime();
     int nodeEndTime();
@@ -28,8 +28,8 @@ public:
         //...
     };
     Q_ENUM(SUBTITLE_TYPE)
-private:
 
+private:
     SUBTITLE_TYPE  m_mSubType{ SUBTITLE_TYPE_UNKNOW };
     QScopedPointer<QFile>    m_mSubTitleFile;
     int    m_mNodeStartTime{ 0 };

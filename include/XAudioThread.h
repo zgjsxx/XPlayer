@@ -13,6 +13,7 @@ class XAudioThread : public XDecodeThread
 public:
     XAudioThread();
     virtual ~XAudioThread();
+
 public:
     virtual bool Open(AVCodecParameters *para, int sampleRate, int channels);
     virtual void Close();
@@ -20,11 +21,12 @@ public:
     void run();
     void SetPause(bool pause);
     void SetVolume(double newVolume);
+
 public:
     bool isPause = false;
     long long pts = 0;
 
-protected:
+private:
     std::mutex amux;
     XAudioPlay *m_pAudioPlay;
     XResample *m_pResample;

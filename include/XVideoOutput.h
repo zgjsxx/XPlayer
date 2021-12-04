@@ -15,15 +15,20 @@ class XVideoOutput : public QQuickPaintedItem, public IVideoCall
 public:
     explicit XVideoOutput(void);
     ~XVideoOutput();
+
 public:
     virtual void Init(int width, int height);
     virtual void Repaint(AVFrame *frame);
+
 signals:
     void requestUpdate();
+
 public slots:
     void procUpdate();
+
 protected:
     virtual void paint(QPainter *pPainter);
+
 private:
     std::mutex  mux;
     QImage m_oVideoFrame;

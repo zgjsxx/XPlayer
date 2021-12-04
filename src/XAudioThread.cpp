@@ -34,8 +34,12 @@ XAudioThread::~XAudioThread()
     //wait thread to exit
     LOG_DEBUG << "exit audio thread";
     isExit = true;
-    delete m_pResample;
-    m_pResample = nullptr;
+    if(m_pResample != nullptr)
+    {
+        delete m_pResample;
+        m_pResample = nullptr;
+    }
+
     wait();
 }
 
@@ -61,14 +65,6 @@ void XAudioThread::Close()
         amux.lock();
         delete m_pResample;
         m_pResample = nullptr;
-        amux.unlock();
-    }
-    if(m_pAudioPlay)
-    {
-        m_pAudioPlay->Close();
-        amux.lock();
-        delete m_pAudioPlay;
-        m_pAudioPlay = nullptr;
         amux.unlock();
     }
 }
@@ -122,7 +118,9 @@ void XAudioThread::SetPause(bool isPause)
     //amux.lock();
     this->isPause = isPause;
     if (m_pAudioPlay)
+    {
         m_pAudioPlay->SetPause(isPause);
+    }
     //amux.unlock();
 }
 

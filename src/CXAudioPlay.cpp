@@ -1,5 +1,16 @@
-#include "CXAudioPlay.h"
+#include "include/CXAudioPlay.h"
 #include "Logger.h"
+
+CXAudioPlay::CXAudioPlay()
+{
+
+}
+
+CXAudioPlay::~CXAudioPlay()
+{
+    Close();
+}
+
 void CXAudioPlay::SetVolume(double newVolume)
 {
     // Definition: QAudioOutput *output = NULL;

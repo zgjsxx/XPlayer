@@ -9,6 +9,10 @@
 class CXAudioPlay : public XAudioPlay
 {
 public:
+    CXAudioPlay();
+    ~CXAudioPlay();
+
+public:
     virtual void SetVolume(double newVolume) override;
     virtual long long GetNoPlayMs() override;
     virtual void Clear() override;

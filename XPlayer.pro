@@ -18,21 +18,21 @@ win32 {
 }
 
 SOURCES += \
-        CXAudioPlay.cpp \
-        Logger.cpp \
-        MainApp.cpp \
-        XAudioPlay.cpp \
-        XAudioThread.cpp \
-        XDecode.cpp \
-        XDecodeThread.cpp \
-        XDemux.cpp \
-        XDemuxThread.cpp \
-        XPlay.cpp \
-        XResample.cpp \
-        XSubTitle.cpp \
-        XVideoOutput.cpp \
-        XVideoThread.cpp \
-        main.cpp
+        src/CXAudioPlay.cpp \
+        src/Logger.cpp \
+        src/MainApp.cpp \
+        src/XAudioPlay.cpp \
+        src/XAudioThread.cpp \
+        src/XDecode.cpp \
+        src/XDecodeThread.cpp \
+        src/XDemux.cpp \
+        src/XDemuxThread.cpp \
+        src/XPlay.cpp \
+        src/XResample.cpp \
+        src/XSubTitle.cpp \
+        src/XVideoOutput.cpp \
+        src/XVideoThread.cpp \
+        src/main.cpp
 
 RESOURCES += \
     resource/XPlayer.qrc
@@ -49,26 +49,27 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    CXAudioPlay.h \
-    IVideoCall.h \
-    Logger.h \
-    LoggerTemplate.h \
-    MainApp.h \
-    XAudioPlay.h \
-    XAudioThread.h \
-    XDecode.h \
-    XDecodeThread.h \
-    XDemux.h \
-    XDemuxThread.h \
-    XPlay.h \
-    XResample.h \
-    XSubTitle.h \
-    XVideoOutput.h \
-    XVideoThread.h
+    include/CXAudioPlay.h \
+    include/IVideoCall.h \
+    include/Logger.h \
+    include/LoggerTemplate.h \
+    include/MainApp.h \
+    include/XAudioPlay.h \
+    include/XAudioThread.h \
+    include/XDecode.h \
+    include/XDecodeThread.h \
+    include/XDemux.h \
+    include/XDemuxThread.h \
+    include/XPlay.h \
+    include/XResample.h \
+    include/XSubTitle.h \
+    include/XVideoOutput.h \
+    include/XVideoThread.h
 
 
 #Include path
-INCLUDEPATH += ./import/ffmpeg/include
+INCLUDEPATH += ./import/ffmpeg/include \
+                ./include
 
 # Libaray path and libaray
 

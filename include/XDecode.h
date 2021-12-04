@@ -17,17 +17,20 @@ class XDecode
 public:
     XDecode();
     virtual ~XDecode();
+
 public:
     virtual bool Open(AVCodecParameters *para);
     virtual bool Send(AVPacket *pkt);
     virtual AVFrame *Recv();
     virtual void Close();
     virtual void Clear();
+
 public:
     bool isAudio = false;
     long long pts = 0;
     AVCodecContext *codec = 0;
-protected:
+
+private:
     std::mutex mux;
 };
 #endif // XDECODE_H

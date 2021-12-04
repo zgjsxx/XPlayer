@@ -30,13 +30,14 @@ public:
     bool getOpenSuccess();
     void clearVideoQueue();
     void clearAudioQueue();
+
 public:
     bool isExit = false;
     long long pts = 0;
     long long totalMs = 0;
     bool isPause = false;
 
-protected:
+private:
     std::mutex mux;
     XDemux *m_pDemux = 0;
     bool openSuccess = false;

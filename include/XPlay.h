@@ -85,18 +85,18 @@ public:
 
     bool openSuccess() const;
     void setOpenSuccess(bool openSuccess);
-    //背景图片路径
+    //the path of background
     QString backGround() const;
     void setBackGround(QString url);
-    //选择背景路径
+    //choose background path
     QString backGroundChoose() const;
-    //选择视频路径
+    //choose video path
     QString videoPath() const;
     void setVideoPath(QString url);
-    //选择字幕路径
+    //choose subtitle path
     QString subTitlePath() const;
     void setSubTitlePath(QString url);
-    //字幕文本
+    //ubtitletext
     QString subTitleText() const;
     void setSubTitleText(QString text);
 
