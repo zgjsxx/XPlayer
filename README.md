@@ -4,7 +4,7 @@
 [![qt](https://img.shields.io/static/v1?label=qt&message=5.12.9&color=blue)](https://www.python.org/)
 [![torch](https://img.shields.io/static/v1?label=ffmpeg&message=git-2020-03-15-c467328&color=blue)](https://pytorch.org/)
 
-[TOC]
+
 
 ## 1. introduction
 
@@ -58,4 +58,5 @@ In XAudioThread, it will get the AVPacket from the audio queue. It uses the ```a
 
 ## 4.LICENSE
 
-MIT license
+[MIT license](https://github.com/zgjsxx/XPlayer/blob/main/LICENSE)
+
