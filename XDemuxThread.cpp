@@ -225,6 +225,7 @@ bool XDemuxThread::Open(const char *url, IVideoCall *call)
         LOG_DEBUG << "new at" ;
         at = new XAudioThread();
     }
+    //reopen needs to clear queue first
     clearVideoQueue();
     clearAudioQueue();
 
