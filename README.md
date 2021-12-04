@@ -38,21 +38,23 @@ If everything goes well, it will show you the main UI.
 
 ## 3. Framework
 
+This UI of this project is constructed with QT qml.
+
 We use three thread to co-work to play the video. They are XDemuxThread, XVideoThread and XAudioThread.
 
 The Demux thread is used to split the video element and audio element from the original video file. It uses ```av_read_frame``` to read AVpacket and then put it into video/audio packet queue according the stream index.
 
 ```
-                    |------->AVPacket(video)
+                     |------->AVPacket(video)
 
 av_read_frame -------|
 
 ​                    |-------->AVPacket(audio)
 ```
 
-In XVideoThread, it will get the AVPacket from the video queue.  It uses the ```avcodec_send_packet```/```avcodec_receive_packet```to decode the video AVPacket to AVframe. And then process it to QImage to show.
+In XVideoThread, it will get the AVPacket from the video queue.  It uses the ```avcodec_send_packet```/```avcodec_receive_packet```to decode the video AVPacket to AVframe. And then process it to QImage to show. In video thread, it receives the pts of the audio thread to sync video and audio.
 
-In XAudioThread, it will get the AVPacket from the audio queue. It uses the ```avcodec_send_packet```/```avcodec_receive_packet```to decode the audio AVPacket to AVframe. And then process it to QIODevice to play.
+In XAudioThread, it will get the AVPacket from the audio queue. It uses the ```avcodec_send_packet```/```avcodec_receive_packet```to decode the audio AVPacket to AVframe. We need to resample the packet and then process it to QIODevice to play.
 
 
 
